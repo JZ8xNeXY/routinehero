@@ -19,22 +19,25 @@
 - [x] Create initial commit
 - [x] Create GitHub repository and push
 
-### Supabase
-- [ ] Create project at supabase.com
-- [ ] Create `supabase/migrations/001_families.sql`
-- [ ] Create `supabase/migrations/002_members.sql`
-- [ ] Create `supabase/migrations/003_habits.sql`
-- [ ] Create `supabase/migrations/004_habit_logs.sql`
-- [ ] Create `supabase/migrations/005_line_settings.sql`
-- [ ] Run migrations
-- [ ] Generate types: `npx supabase gen types typescript --local > types/supabase.ts`
+### Supabase ✅
+- [x] Start local Supabase
+- [x] Create `supabase/migrations/001_families.sql`
+- [x] Create `supabase/migrations/002_members.sql`
+- [x] Create `supabase/migrations/003_habits.sql`
+- [x] Create `supabase/migrations/004_habit_logs.sql`
+- [x] Create `supabase/migrations/005_line_settings.sql`
+- [x] Run migrations
+- [x] Generate types: `npx supabase gen types typescript --local > types/supabase.ts`
+- [x] Update `.env.local` with connection info
 
-### Auth
-- [ ] `lib/supabase/client.ts`
-- [ ] `lib/supabase/server.ts`
-- [ ] `middleware.ts` (auth guard)
-- [ ] `app/(auth)/login/page.tsx` (MUI)
-- [ ] `app/(auth)/signup/page.tsx` (MUI)
+### Auth ✅
+- [x] `lib/supabase/client.ts`
+- [x] `lib/supabase/server.ts`
+- [x] `middleware.ts` (auth guard)
+- [x] `app/(auth)/login/page.tsx` (MUI)
+- [x] `app/(auth)/signup/page.tsx` (MUI)
+- [x] Update home page with auth links
+- [x] Test build
 
 ### Onboarding
 - [ ] `app/onboarding/page.tsx` (flow shell)
@@ -79,14 +82,24 @@
 
 ## Results
 
-**Status**: ✅ Next.js + MUI project successfully initialized
+### 2026-02-22 — Session 1: Environment + Supabase + Auth
 
-**Working**:
-- Dev server running on http://localhost:3000
-- MUI theme applied (indigo/pink colors, Nunito font)
-- TypeScript, ESLint configured
+**Completed**:
+- ✅ Next.js 15 + MUI + TypeScript project created
+- ✅ Local Supabase running (Docker)
+- ✅ Database schema created with RLS enabled
+- ✅ Authentication implemented (login/signup pages)
+- ✅ Middleware for route protection
+- ✅ Build tested successfully
+- ✅ Committed and pushed to GitHub
+
+**Working URLs**:
+- Dev server: http://localhost:3000
+- Supabase Studio: http://127.0.0.1:54323
+- Login: http://localhost:3000/login
+- Signup: http://localhost:3000/signup
 
 **Next Steps**:
-1. Create `.env.local` with Supabase credentials
-2. Set up Supabase project and migrations
-3. Implement authentication
+1. Create onboarding flow
+2. Build dashboard
+3. Implement habit tracking features
