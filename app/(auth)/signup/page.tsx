@@ -11,7 +11,9 @@ import {
   Alert,
   Link as MuiLink,
   Paper,
+  Divider,
 } from "@mui/material";
+import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 
@@ -61,6 +63,21 @@ export default function SignupPage() {
     }
   };
 
+  const handleGoogleSignup = async () => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message || "Google signup failed");
+    }
+  };
+
   return (
     <Container maxWidth="sm">
       <Box
@@ -84,6 +101,19 @@ export default function SignupPage() {
               {error}
             </Alert>
           )}
+
+          <Button
+            fullWidth
+            variant="outlined"
+            size="large"
+            startIcon={<GoogleIcon />}
+            onClick={handleGoogleSignup}
+            sx={{ mb: 3 }}
+          >
+            Continue with Google
+          </Button>
+
+          <Divider sx={{ mb: 3 }}>or</Divider>
 
           <Box component="form" onSubmit={handleSignup}>
             <TextField
