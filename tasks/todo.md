@@ -13,8 +13,11 @@
 - [x] Set up MUI theme (`components/ThemeRegistry.tsx`)
 - [x] Create basic app structure (`app/layout.tsx`, `app/page.tsx`)
 - [x] Start dev server (http://localhost:3000)
-- [ ] Create `.env.local` with Supabase credentials
-- [ ] Test build (`npm run build`)
+- [x] Create `.env.local` with Supabase credentials
+- [x] Test build (`npm run build`)
+- [x] Initialize git repository
+- [x] Create initial commit
+- [x] Create GitHub repository and push
 
 ### Supabase
 - [ ] Create project at supabase.com
