@@ -115,13 +115,23 @@ export default function MyComponent() {
 ## Environment Variables Required
 
 ```
-NEXT_PUBLIC_SUPABASE_URL=
-NEXT_PUBLIC_SUPABASE_ANON_KEY=
-SUPABASE_SERVICE_ROLE_KEY=
+# Supabase (Cloud)
+NEXT_PUBLIC_SUPABASE_URL=https://mpkaoiqxdgdgkdmtmpct.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# LINE Messaging API
 LINE_CHANNEL_ACCESS_TOKEN=
 LINE_CHANNEL_SECRET=
-NEXT_PUBLIC_APP_URL=
+
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
+
+**Supabase Project**:
+- Project ID: `mpkaoiqxdgdgkdmtmpct`
+- Region: Tokyo (ap-northeast-1)
+- Dashboard: https://supabase.com/dashboard/project/mpkaoiqxdgdgkdmtmpct
 
 ---
 
