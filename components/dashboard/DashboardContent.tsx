@@ -12,6 +12,7 @@ import {
 import type { Database } from "@/types/supabase";
 import NextMissionCard from "@/components/dashboard/NextMissionCard";
 import FamilyStatusBar from "@/components/member/FamilyStatusBar";
+import MemberQuickNav from "@/components/member/MemberQuickNav";
 import HabitCard from "@/components/habit/HabitCard";
 
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
@@ -63,6 +64,7 @@ export default function DashboardContent({
   return (
     <>
       <FamilyStatusBar members={members} />
+      <MemberQuickNav members={members} />
 
       <FormControl size="small" sx={{ mb: 3, minWidth: 200 }}>
         <InputLabel>Filter by Member</InputLabel>

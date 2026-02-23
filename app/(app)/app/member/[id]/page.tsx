@@ -1,22 +1,26 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { Box, Container, Stack, Typography } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import type { Database } from "@/types/supabase";
-import DashboardContent from "@/components/dashboard/DashboardContent";
 import XPPopup from "@/components/dashboard/XPPopup";
-import DashboardNav from "@/components/dashboard/DashboardNav";
+import MemberPageContent from "@/components/member/MemberPageContent";
 import { filterHabitsByDate } from "@/lib/utils/habitFilters";
 
 export const dynamic = "force-dynamic";
 
-type FamilyRow = Database["public"]["Tables"]["families"]["Row"];
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 type HabitRow = Database["public"]["Tables"]["habits"]["Row"];
 type HabitLogRow = Database["public"]["Tables"]["habit_logs"]["Row"];
 
-export default async function DashboardPage() {
+interface MemberPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export default async function MemberPage({ params }: MemberPageProps) {
+  const { id: memberId } = await params;
   const supabase = (await createClient()) as any;
 
+  // Auth check
   let user: { id: string } | null = null;
   try {
     const {
@@ -31,33 +35,33 @@ export default async function DashboardPage() {
     redirect("/login");
   }
 
-  // Check if user has completed onboarding
+  // Get family
   const { data: familyData, error: familyError } = await supabase
     .from("families")
     .select("*")
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (familyError) {
-    redirect("/login");
+  if (familyError || !familyData) {
+    redirect("/app");
   }
 
-  const family = familyData as FamilyRow | null;
+  const family = familyData;
 
-  if (!family) {
-    redirect("/onboarding");
-  }
-
-  // Get family members
-  const { data: memberData, error: membersError } = await supabase
+  // Get member and validate it belongs to this family
+  const { data: memberData, error: memberError } = await supabase
     .from("members")
     .select("*")
-    .eq("family_id", family.id)
-    .order("display_order");
+    .eq("id", memberId)
+    .maybeSingle();
 
-  const members = (membersError ? [] : memberData || []) as MemberRow[];
+  const member = memberData as MemberRow | null;
 
-  // Get habits
+  if (memberError || !member || member.family_id !== family.id) {
+    redirect("/app");
+  }
+
+  // Get habits assigned to this member
   const { data: habitData, error: habitsError } = await supabase
     .from("habits")
     .select("*")
@@ -67,43 +71,48 @@ export default async function DashboardPage() {
 
   let habits = (habitsError ? [] : habitData || []) as HabitRow[];
 
+  // Get today's date (used for filtering and logs)
   const today = new Date().toISOString().slice(0, 10);
+
+  // Filter habits that include this member
+  habits = habits.filter((habit) => habit.member_ids.includes(member.id));
 
   // Filter habits based on today's day of week and frequency
   habits = filterHabitsByDate(habits, today);
 
-  // Sort habits by time_of_day (habits with time first, then alphabetically)
+  // Sort habits by time_of_day
   habits = habits.sort((a, b) => {
-    // If both have time, sort by time
     if (a.time_of_day && b.time_of_day) {
       return a.time_of_day.localeCompare(b.time_of_day);
     }
-    // Habits with time come first
     if (a.time_of_day && !b.time_of_day) return -1;
     if (!a.time_of_day && b.time_of_day) return 1;
-    // If neither has time, maintain original order (display_order)
     return 0;
   });
 
-  let logs: HabitLogRow[] = [];
-  if (members.length > 0 && habits.length > 0) {
-    const { data: logData, error: logsError } = await supabase
-      .from("habit_logs")
-      .select("*")
-      .eq("date", today)
-      .in(
-        "member_id",
-        members.map((member) => member.id)
-      )
-      .in(
-        "habit_id",
-        habits.map((habit) => habit.id)
-      );
+  // Get today's habit logs for this member
+  const { data: logData, error: logsError } = await supabase
+    .from("habit_logs")
+    .select("*")
+    .eq("date", today)
+    .eq("member_id", member.id);
 
-    logs = (logsError ? [] : logData || []) as HabitLogRow[];
-  }
+  const logs = (logsError ? [] : logData || []) as HabitLogRow[];
 
-  // Build a map of completed habits by habit_id (serializable for client component)
+  // Build completed habit IDs array
+  const completedHabitIds = logs.map((log) => log.habit_id);
+
+  // Calculate today's completion stats
+  const completedToday = logs.length;
+  const totalHabitsToday = habits.length;
+  const completionPercentage =
+    totalHabitsToday > 0 ? (completedToday / totalHabitsToday) * 100 : 0;
+
+  // Calculate XP progress to next level
+  const xpForNextLevel = member.level * 100;
+  const xpProgress = xpForNextLevel > 0 ? (member.total_xp / xpForNextLevel) * 100 : 0;
+
+  // Build completedByHabit map for HabitCard
   const completedByHabit: Record<string, string[]> = {};
   for (const log of logs) {
     if (!completedByHabit[log.habit_id]) {
@@ -116,30 +125,16 @@ export default async function DashboardPage() {
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
         <XPPopup />
-
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={3}
-        >
-          <Box>
-            <Typography variant="h4" fontWeight="bold">
-              {family.family_name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              {today} · {family.timezone}
-            </Typography>
-          </Box>
-          <DashboardNav />
-        </Stack>
-
-        <DashboardContent
-          family={family}
-          members={members}
+        <MemberPageContent
+          member={member}
           habits={habits}
           completedByHabit={completedByHabit}
-          today={today}
+          familyId={family.id}
+          completedToday={completedToday}
+          totalHabitsToday={totalHabitsToday}
+          completionPercentage={completionPercentage}
+          xpForNextLevel={xpForNextLevel}
+          xpProgress={xpProgress}
         />
       </Box>
     </Container>
