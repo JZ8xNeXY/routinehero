@@ -48,8 +48,13 @@ export default function LoginPage() {
         localStorage.removeItem("rememberMe");
       }
 
-      // Force full page reload to ensure middleware picks up the new session
-      window.location.href = "/app";
+      // Wait for session to be fully established and cookies to be set
+      // The createBrowserClient automatically syncs to cookies via the browser's cookie store
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      // Use Next.js router for navigation to ensure proper session handling
+      router.push("/app");
+      router.refresh();
     } catch (err: any) {
       setError(err.message || "Login failed");
     } finally {

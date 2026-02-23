@@ -11,19 +11,16 @@ export function createClient(rememberMe?: boolean) {
     shouldRemember = savedPreference === "true" || savedPreference === null;
   }
 
-  // Use localStorage if shouldRemember is true, otherwise use sessionStorage
-  const storage = shouldRemember ? localStorage : sessionStorage;
-
+  // Use default cookie-based storage for SSR compatibility
+  // The browser client will automatically sync with both cookies and localStorage
   return createBrowserClient<Database, "public">(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      auth: {
-        storage: storage as any,
-        storageKey: "sb-auth-token",
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true,
+      cookieOptions: {
+        // Set cookie lifetime based on rememberMe preference
+        // If rememberMe is false, cookies will expire when browser closes
+        maxAge: shouldRemember ? 60 * 60 * 24 * 365 : undefined, // 1 year or session
       },
     }
   );
