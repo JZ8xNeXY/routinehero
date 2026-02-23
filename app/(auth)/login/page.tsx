@@ -12,6 +12,8 @@ import {
   Link as MuiLink,
   Paper,
   Divider,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
@@ -20,10 +22,10 @@ import { createClient } from "@/lib/supabase/client";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,6 +33,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
+      const supabase = createClient(rememberMe);
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -38,8 +41,15 @@ export default function LoginPage() {
 
       if (error) throw error;
 
-      router.push("/app");
-      router.refresh();
+      // Save rememberMe preference
+      if (rememberMe) {
+        localStorage.setItem("rememberMe", "true");
+      } else {
+        localStorage.removeItem("rememberMe");
+      }
+
+      // Force full page reload to ensure middleware picks up the new session
+      window.location.href = "/app";
     } catch (err: any) {
       setError(err.message || "Login failed");
     } finally {
@@ -49,6 +59,7 @@ export default function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
+      const supabase = createClient();
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
@@ -121,13 +132,25 @@ export default function LoginPage() {
               autoComplete="current-password"
             />
 
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  color="primary"
+                />
+              }
+              label="Keep me signed in"
+              sx={{ mt: 1 }}
+            />
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               size="large"
               disabled={loading}
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 2, mb: 2 }}
             >
               {loading ? "Signing in..." : "Sign In"}
             </Button>

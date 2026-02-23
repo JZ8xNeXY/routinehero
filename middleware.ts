@@ -2,10 +2,19 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
+  // Determine locale (default to 'en', check cookie for preference)
+  const locale = request.cookies.get("NEXT_LOCALE")?.value || "en";
+
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
   });
 
+  // Set locale header for next-intl
+  response.headers.set("x-next-intl-locale", locale);
+
+  // Handle Supabase auth
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -18,33 +27,38 @@ export async function middleware(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           );
-          supabaseResponse = NextResponse.next({
+          response = NextResponse.next({
             request,
           });
+          response.headers.set("x-next-intl-locale", locale);
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            response.cookies.set(name, value, options)
           );
         },
       },
     }
   );
 
-  // Refresh session if expired
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: { id: string } | null = null;
+  try {
+    const {
+      data: { user: currentUser },
+    } = await supabase.auth.getUser();
+    user = currentUser;
+  } catch {
+    user = null;
+  }
 
   // Protected routes
-  if (!user && request.nextUrl.pathname.startsWith("/app")) {
+  if (
+    !user &&
+    (request.nextUrl.pathname.startsWith("/app") ||
+      request.nextUrl.pathname.startsWith("/onboarding"))
+  ) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // Redirect authenticated users from auth pages
-  if (user && (request.nextUrl.pathname === "/login" || request.nextUrl.pathname === "/signup")) {
-    return NextResponse.redirect(new URL("/app", request.url));
-  }
-
-  return supabaseResponse;
+  return response;
 }
 
 export const config = {

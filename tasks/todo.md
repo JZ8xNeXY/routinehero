@@ -40,21 +40,21 @@
 - [x] Test build
 
 ### Onboarding
-- [ ] `app/onboarding/page.tsx` (flow shell)
-- [ ] `components/onboarding/steps/Welcome.tsx` (MUI)
-- [ ] `components/onboarding/steps/ParentSetup.tsx` (MUI)
-- [ ] `components/onboarding/steps/AddKids.tsx` (MUI)
-- [ ] `components/onboarding/steps/CharacterSelect.tsx` (MUI)
-- [ ] `components/onboarding/steps/HabitSelect.tsx` (MUI)
-- [ ] Supabase write on completion
+- [x] `app/onboarding/page.tsx` (flow shell)
+- [x] `components/onboarding/steps/Welcome.tsx` (MUI)
+- [x] `components/onboarding/steps/ParentSetup.tsx` (MUI)
+- [x] `components/onboarding/steps/AddKids.tsx` (MUI)
+- [x] `components/onboarding/steps/CharacterSelect.tsx` (MUI)
+- [x] `components/onboarding/steps/HabitSelect.tsx` (MUI)
+- [x] Supabase write on completion
 
 ### Dashboard
-- [ ] `app/(app)/page.tsx`
-- [ ] `components/dashboard/NextMissionCard.tsx` (MUI Card)
-- [ ] `components/member/FamilyStatusBar.tsx` (MUI)
-- [ ] `components/habit/HabitCard.tsx` (MUI Card)
-- [ ] `components/dashboard/XPPopup.tsx` (MUI Dialog/Snackbar)
-- [ ] habit_logs read/write
+- [x] `app/(app)/app/page.tsx`
+- [x] `components/dashboard/NextMissionCard.tsx` (MUI Card)
+- [x] `components/member/FamilyStatusBar.tsx` (MUI)
+- [x] `components/habit/HabitCard.tsx` (MUI Card)
+- [x] `components/dashboard/XPPopup.tsx` (MUI Dialog/Snackbar)
+- [x] habit_logs read/write
 
 ---
 
@@ -103,3 +103,42 @@
 1. Create onboarding flow
 2. Build dashboard
 3. Implement habit tracking features
+
+### 2026-02-22 — Session 2: Onboarding + Dashboard
+
+**Completed**:
+- ✅ Regenerated `types/supabase.ts` and fixed build blocker
+- ✅ Implemented onboarding flow and Supabase writes
+- ✅ Fixed dashboard route to `/app`
+- ✅ Added dashboard components (`NextMissionCard`, `FamilyStatusBar`, `HabitCard`, `XPPopup`)
+- ✅ Implemented habit completion writes to `habit_logs` with duplicate-safe handling
+- ✅ Implemented today's `habit_logs` read on dashboard
+- ✅ Build tested successfully (`npm run build`)
+
+**Working URLs**:
+- Dashboard: http://localhost:3000/app
+- Onboarding: http://localhost:3000/onboarding
+
+### 2026-02-23 — Session 3: Google OAuth Setup
+
+**Completed**:
+- ✅ Verified existing Google OAuth implementation (code is ready)
+- ✅ Created setup checklist (`tasks/google-oauth-setup.md`)
+- ✅ Build tested successfully (`npm run build`)
+
+**Action Required** (Manual Setup):
+1. Configure Google Cloud Console (create OAuth client)
+2. Enable Google provider in Supabase Dashboard
+3. Test Google sign-in flow
+
+**Setup Guide**: See `tasks/google-oauth-setup.md` for step-by-step instructions
+
+**Code Status**:
+- ✅ Google sign-in button implemented (`/login`, `/signup`)
+- ✅ OAuth callback handler (`/auth/callback`)
+- ✅ Proper redirect logic (onboarding vs dashboard)
+- ⏳ **Pending**: Supabase Dashboard configuration
+
+**Bug Fixes**:
+- ✅ Fixed post-login redirect issue (changed from `router.push` to `window.location.href`)
+- ✅ Applied fix to login, signup, and onboarding completion flows

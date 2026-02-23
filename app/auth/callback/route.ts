@@ -7,10 +7,24 @@ export async function GET(request: Request) {
   const origin = requestUrl.origin;
 
   if (code) {
-    const supabase = await createClient();
+    const supabase = (await createClient()) as any;
     await supabase.auth.exchangeCodeForSession(code);
+
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+
+    if (user) {
+      const { data: family } = await supabase
+        .from("families")
+        .select("id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+
+      const nextPath = family ? "/app" : "/onboarding";
+      return NextResponse.redirect(`${origin}${nextPath}`);
+    }
   }
 
-  // URL to redirect to after sign in process completes
-  return NextResponse.redirect(`${origin}/onboarding`);
+  return NextResponse.redirect(`${origin}/login`);
 }

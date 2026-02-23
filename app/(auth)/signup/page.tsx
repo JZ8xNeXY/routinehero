@@ -22,13 +22,14 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccessMessage("");
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
@@ -43,7 +44,8 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.signUp({
+      const supabase = createClient();
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -53,9 +55,15 @@ export default function SignupPage() {
 
       if (error) throw error;
 
-      // After signup, redirect to onboarding
-      router.push("/onboarding");
-      router.refresh();
+      if (!data.session) {
+        setSuccessMessage(
+          "Account created. Check your email to confirm your account, then sign in."
+        );
+        return;
+      }
+
+      // Force full page reload to ensure middleware picks up the new session
+      window.location.href = "/onboarding";
     } catch (err: any) {
       setError(err.message || "Signup failed");
     } finally {
@@ -65,6 +73,7 @@ export default function SignupPage() {
 
   const handleGoogleSignup = async () => {
     try {
+      const supabase = createClient();
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
@@ -99,6 +108,12 @@ export default function SignupPage() {
           {error && (
             <Alert severity="error" sx={{ mb: 3 }}>
               {error}
+            </Alert>
+          )}
+
+          {successMessage && (
+            <Alert severity="success" sx={{ mb: 3 }}>
+              {successMessage}
             </Alert>
           )}
 
