@@ -1,4 +1,4 @@
-import { Card, CardContent, Button, Chip, Stack, Typography } from "@mui/material";
+import { Card, CardContent, Button, Chip, Stack, Typography, Avatar } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import type { Database } from "@/types/supabase";
@@ -39,11 +39,30 @@ export default function HabitCard({
               </Typography>
             </div>
           </Stack>
-          <Chip
-            size="small"
-            color={completedCount === assignedMembers.length ? "success" : "default"}
-            label={`${completedCount}/${assignedMembers.length} done`}
-          />
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Stack direction="row" spacing={0.5}>
+              {assignedMembers.map((member) => (
+                <Avatar
+                  key={member.id}
+                  src={member.avatar_url || undefined}
+                  sx={{
+                    width: 28,
+                    height: 28,
+                    fontSize: "0.75rem",
+                    border: completedMemberIds.includes(member.id) ? "2px solid" : "none",
+                    borderColor: "success.main"
+                  }}
+                >
+                  {member.name[0]?.toUpperCase()}
+                </Avatar>
+              ))}
+            </Stack>
+            <Chip
+              size="small"
+              color={completedCount === assignedMembers.length ? "success" : "default"}
+              label={`${completedCount}/${assignedMembers.length}`}
+            />
+          </Stack>
         </Stack>
 
         <Stack spacing={1}>
@@ -67,9 +86,17 @@ export default function HabitCard({
                   bgcolor: completed ? "success.50" : "grey.50",
                 }}
               >
-                <Typography variant="body2" fontWeight={600}>
-                  {member.name}
-                </Typography>
+                <Stack direction="row" alignItems="center" spacing={1.5}>
+                  <Avatar
+                    src={member.avatar_url || undefined}
+                    sx={{ width: 32, height: 32 }}
+                  >
+                    {member.name[0]?.toUpperCase()}
+                  </Avatar>
+                  <Typography variant="body2" fontWeight={600}>
+                    {member.name}
+                  </Typography>
+                </Stack>
 
                 {completed ? (
                   <Button
