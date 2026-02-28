@@ -23,29 +23,31 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { useTranslations } from "next-intl";
 
 export default function DashboardNav() {
   const router = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const t = useTranslations("nav");
 
   const menuItems = [
     {
-      label: "Leaderboard",
+      key: "leaderboard",
       icon: <EmojiEventsIcon />,
       href: "/app/leaderboard",
     },
     {
-      label: "Members",
+      key: "members",
       icon: <PeopleIcon />,
       href: "/app/members",
     },
     {
-      label: "Habits",
+      key: "habits",
       icon: <ChecklistIcon />,
       href: "/app/habits",
     },
     {
-      label: "Settings",
+      key: "settings",
       icon: <SettingsIcon />,
       href: "/app/settings",
     },
@@ -80,20 +82,20 @@ export default function DashboardNav() {
         >
           <Box sx={{ p: 3, bgcolor: "primary.main", color: "white" }}>
             <Typography variant="h6" fontWeight="bold">
-              Menu
+              {t("menu")}
             </Typography>
           </Box>
 
           <List>
             {menuItems.map((item) => (
-              <ListItem key={item.label} disablePadding>
+              <ListItem key={item.key} disablePadding>
                 <ListItemButton
                   component={Link}
                   href={item.href}
                   onClick={() => setDrawerOpen(false)}
                 >
                   <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.label} />
+                  <ListItemText primary={t(item.key as any)} />
                 </ListItemButton>
               </ListItem>
             ))}
@@ -121,7 +123,7 @@ export default function DashboardNav() {
                 <ListItemIcon>
                   <LogoutIcon />
                 </ListItemIcon>
-                <ListItemText primary="Sign Out" />
+                <ListItemText primary={t("signOut")} />
               </ListItemButton>
             </ListItem>
           </List>
