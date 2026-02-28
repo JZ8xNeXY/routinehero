@@ -114,3 +114,55 @@ export async function sendHabitReminderBefore30Min(
 
   return sendLineMessage(userId, message);
 }
+
+/**
+ * 朝の家族サマリー通知
+ */
+export async function sendFamilySummary(
+  userId: string,
+  familyName: string,
+  memberStats: Array<{
+    name: string;
+    completedYesterday: number;
+    totalYesterday: number;
+    streak: number;
+    level: number;
+  }>,
+  todayHabitCount: number
+): Promise<boolean> {
+  // 昨日の達成率でソート（高い順）
+  const sortedMembers = [...memberStats].sort((a, b) => {
+    const rateA = a.totalYesterday > 0 ? a.completedYesterday / a.totalYesterday : 0;
+    const rateB = b.totalYesterday > 0 ? b.completedYesterday / b.totalYesterday : 0;
+    return rateB - rateA;
+  });
+
+  // MVPを判定（100%達成した人の中で最もストリークが長い人）
+  const perfectMembers = sortedMembers.filter(m =>
+    m.totalYesterday > 0 && m.completedYesterday === m.totalYesterday
+  );
+  const mvp = perfectMembers.length > 0
+    ? perfectMembers.reduce((a, b) => a.streak > b.streak ? a : b)
+    : null;
+
+  // メンバー別の達成状況を作成
+  let memberSummary = '';
+  for (const member of sortedMembers) {
+    const rate = member.totalYesterday > 0
+      ? Math.round((member.completedYesterday / member.totalYesterday) * 100)
+      : 0;
+
+    const streakText = member.streak > 0 ? ` 🔥${member.streak}日連続` : '';
+    const mvpText = mvp && mvp.name === member.name ? ' ⭐️MVP' : '';
+
+    if (member.totalYesterday > 0) {
+      memberSummary += `${member.name}: ${member.completedYesterday}/${member.totalYesterday}完了 (${rate}%)${streakText}${mvpText}\n`;
+    } else {
+      memberSummary += `${member.name}: 習慣なし\n`;
+    }
+  }
+
+  const message = `🌅 おはよう、${familyName}！\n\n📊 昨日の達成状況\n━━━━━━━━━━━━\n${memberSummary}\n🎯 今日の習慣: ${todayHabitCount}個\n家族で頑張りましょう！💪`;
+
+  return sendLineMessage(userId, message);
+}
