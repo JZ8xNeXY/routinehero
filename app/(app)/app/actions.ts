@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { getTodayInTimezone, getYesterdayInTimezone } from "@/lib/utils/timezone";
 
 type CompleteHabitInput = {
   habitId: string;
@@ -36,13 +37,15 @@ export async function completeHabitForMember(input: CompleteHabitInput) {
 
   const { data: family } = await supabase
     .from("families")
-    .select("id")
+    .select("id, timezone")
     .eq("user_id", user.id)
     .maybeSingle();
 
   if (!family) {
     redirect("/onboarding");
   }
+
+  const timezone = family.timezone || 'UTC';
 
   const { data: member } = await supabase
     .from("members")
@@ -60,7 +63,8 @@ export async function completeHabitForMember(input: CompleteHabitInput) {
     redirect("/app?error=invalid-target");
   }
 
-  const today = new Date().toISOString().slice(0, 10);
+  // Use family's timezone for accurate date
+  const today = getTodayInTimezone(timezone);
 
   const { error } = await supabase.from("habit_logs").insert({
     habit_id: habit.id,
@@ -89,10 +93,8 @@ export async function completeHabitForMember(input: CompleteHabitInput) {
     newLevel = calculateLevel(newTotalXp);
     leveledUp = newLevel > oldLevel;
 
-    // Calculate streak
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toISOString().slice(0, 10);
+    // Calculate streak using family's timezone
+    const yesterdayStr = getYesterdayInTimezone(timezone);
 
     // Check if member completed any habit yesterday
     const { data: yesterdayLogs } = await supabase
