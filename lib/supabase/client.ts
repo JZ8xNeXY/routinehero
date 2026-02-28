@@ -19,8 +19,10 @@ export function createClient(rememberMe?: boolean) {
     {
       cookieOptions: {
         // Set cookie lifetime based on rememberMe preference
-        // If rememberMe is false, cookies will expire when browser closes
         maxAge: shouldRemember ? 60 * 60 * 24 * 365 : undefined, // 1 year or session
+        path: "/",
+        sameSite: "lax",
+        secure: process.env.NODE_ENV === "production",
       },
     }
   );

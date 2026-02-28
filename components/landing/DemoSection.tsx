@@ -39,82 +39,51 @@ export default function DemoSection() {
             bgcolor: "#f3f4f6",
           }}
         >
-          {/* Video/Demo placeholder */}
+          {/* Demo screenshot */}
           <Box
             sx={{
               position: "relative",
-              paddingTop: "56.25%", // 16:9 aspect ratio
-              bgcolor: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              width: "100%",
+              height: "auto",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
+              background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              p: 4,
             }}
           >
-            <Stack
-              spacing={3}
-              alignItems="center"
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                textAlign: "center",
-              }}
-            >
-              <Box
-                sx={{
-                  width: 120,
-                  height: 120,
-                  borderRadius: "50%",
-                  bgcolor: "rgba(255,255,255,0.2)",
-                  backdropFilter: "blur(10px)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                  "&:hover": {
-                    transform: "scale(1.1)",
-                    bgcolor: "rgba(255,255,255,0.3)",
-                  },
-                }}
-              >
-                <PlayCircleOutlineIcon
-                  sx={{
-                    fontSize: 80,
-                    color: "white",
-                  }}
-                />
-              </Box>
-              <Typography
-                variant="h5"
-                fontWeight="bold"
-                color="white"
-                sx={{
-                  textShadow: "0 2px 8px rgba(0,0,0,0.2)",
-                }}
-              >
-                {t("watchDemo")}
-              </Typography>
-              <Typography
-                variant="body1"
-                color="white"
-                sx={{
-                  opacity: 0.9,
-                  maxWidth: 400,
-                }}
-              >
-                {t("demoDescription")}
-              </Typography>
-            </Stack>
-
-            {/* Gradient overlay */}
             <Box
+              component="img"
+              src="/dashboard-screenshot.png"
+              alt="RoutineHero Dashboard"
               sx={{
-                position: "absolute",
-                inset: 0,
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                opacity: 0.95,
+                width: "100%",
+                height: "auto",
+                maxWidth: 900,
+                borderRadius: 2,
+                boxShadow: "0 20px 60px rgba(0,0,0,0.3)",
+              }}
+              onError={(e: any) => {
+                // Fallback to placeholder if image doesn't exist
+                e.target.style.display = "none";
+                e.target.parentElement.innerHTML = `
+                  <div style="
+                    width: 100%;
+                    padding-top: 56.25%;
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    border-radius: 8px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-size: 1.5rem;
+                    text-align: center;
+                  ">
+                    <p style="position: absolute; top: 50%; transform: translateY(-50%);">
+                      📊 ダッシュボード画面
+                    </p>
+                  </div>
+                `;
               }}
             />
           </Box>
