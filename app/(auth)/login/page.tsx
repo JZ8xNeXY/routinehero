@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -27,7 +27,30 @@ export default function LoginPage() {
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [checking, setChecking] = useState(true);
   const router = useRouter();
+
+  // Check if user is already logged in
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (user) {
+          // User is already logged in, redirect to app
+          router.push("/app");
+          router.refresh();
+        }
+      } catch (error) {
+        console.error("Error checking auth:", error);
+      } finally {
+        setChecking(false);
+      }
+    };
+
+    checkUser();
+  }, [router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,6 +102,26 @@ export default function LoginPage() {
       setError(err.message || "Google login failed");
     }
   };
+
+  // Show loading state while checking auth
+  if (checking) {
+    return (
+      <Container maxWidth="sm">
+        <Box
+          sx={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Typography variant="body1" color="text.secondary">
+            {t("loading")}...
+          </Typography>
+        </Box>
+      </Container>
+    );
+  }
 
   return (
     <Container maxWidth="sm">
