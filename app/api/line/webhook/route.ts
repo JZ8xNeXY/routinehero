@@ -214,7 +214,7 @@ async function handleMessage(event: LineWebhookEvent, supabase: any) {
   await sendReplyMessage(event.replyToken!, [
     {
       type: 'text',
-      text: '✅ RoutineHeroと連携しました！\n\n習慣の30分前にリマインダーが届きます。\n頑張りましょう！🌟',
+      text: '✅ RoutineHeroと連携しました！\n\n毎朝5時に、今日の習慣をお知らせします。\n\n習慣を続けて、一緒に成長しましょう！🌟',
     },
   ]);
 
