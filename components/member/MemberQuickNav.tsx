@@ -16,10 +16,12 @@ export default function MemberQuickNav({ members }: MemberQuickNavProps) {
     <Box
       sx={{
         mb: 3,
-        display: "flex",
+        display: "grid",
+        gridTemplateColumns: {
+          xs: "repeat(auto-fit, minmax(140px, 1fr))",
+          sm: "repeat(auto-fit, minmax(160px, 1fr))",
+        },
         gap: 2,
-        justifyContent: "space-between",
-        flexWrap: "wrap",
       }}
     >
       {members.map((member) => (
