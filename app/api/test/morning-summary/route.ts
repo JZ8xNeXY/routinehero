@@ -50,8 +50,10 @@ export async function GET(request: NextRequest) {
 
       const now = new Date();
       const today = now.toISOString().slice(0, 10);
-      const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      const yesterdayDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+      const yesterday = yesterdayDate.toISOString().slice(0, 10);
       const todayDayOfWeek = now.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
+      const yesterdayDayOfWeek = yesterdayDate.getDay();
 
       console.log('Processing family:', settingData.family_id);
 
@@ -86,15 +88,22 @@ export async function GET(request: NextRequest) {
 
       if (members) {
         for (const member of members) {
-          // 昨日の習慣を取得
-          const { data: yesterdayHabits } = await supabase
+          // 昨日の習慣を取得（昨日の曜日でフィルタ）
+          const { data: allMemberHabits } = await supabase
             .from('habits')
-            .select('id')
+            .select('id, days_of_week, frequency')
             .eq('family_id', settingData.family_id)
             .eq('is_active', true)
             .contains('member_ids', [member.id]);
 
-          const totalYesterday = yesterdayHabits?.length || 0;
+          // 昨日実施すべきだった習慣のみフィルタ
+          const yesterdayHabits = allMemberHabits?.filter(habit => {
+            if (habit.frequency === 'daily') return true;
+            if (habit.days_of_week && habit.days_of_week.includes(yesterdayDayOfWeek)) return true;
+            return false;
+          }) || [];
+
+          const totalYesterday = yesterdayHabits.length;
 
           // 昨日の完了数を取得
           const { data: completedLogs } = await supabase
@@ -106,7 +115,7 @@ export async function GET(request: NextRequest) {
 
           const completedYesterday = completedLogs?.length || 0;
 
-          console.log(`${member.name}: ${completedYesterday}/${totalYesterday}`);
+          console.log(`${member.name}: ${completedYesterday}/${totalYesterday} (yesterday was day ${yesterdayDayOfWeek})`);
 
           memberStats.push({
             name: member.name,
