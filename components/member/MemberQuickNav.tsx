@@ -16,19 +16,13 @@ export default function MemberQuickNav({ members }: MemberQuickNavProps) {
     <Box
       sx={{
         mb: 3,
-        overflowX: "auto",
-        pb: 1,
-        "&::-webkit-scrollbar": {
-          height: 6,
-        },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "rgba(0,0,0,.2)",
-          borderRadius: 3,
-        },
+        display: "flex",
+        gap: 2,
+        justifyContent: "space-between",
+        flexWrap: "wrap",
       }}
     >
-      <Stack direction="row" spacing={2} sx={{ minWidth: "min-content" }}>
-        {members.map((member) => (
+      {members.map((member) => (
           <Link
             key={member.id}
             href={`/app/member/${member.id}`}
@@ -107,7 +101,5 @@ export default function MemberQuickNav({ members }: MemberQuickNavProps) {
             </Card>
           </Link>
         ))}
-      </Stack>
-    </Box>
   );
 }
