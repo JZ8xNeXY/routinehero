@@ -69,15 +69,23 @@ export async function GET(request: NextRequest) {
 
       const today = now.toISOString().slice(0, 10);
       const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      const todayDayOfWeek = now.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
 
-      // 今日の習慣数を取得
-      const { data: todayHabits } = await supabase
+      // 今日の習慣数を取得（今日の曜日でフィルタ）
+      const { data: allHabits } = await supabase
         .from('habits')
-        .select('id')
+        .select('id, days_of_week, frequency')
         .eq('family_id', settingData.family_id)
         .eq('is_active', true);
 
-      const todayHabitCount = todayHabits?.length || 0;
+      // 今日実施すべき習慣のみカウント
+      const todayHabits = allHabits?.filter(habit => {
+        if (habit.frequency === 'daily') return true;
+        if (habit.days_of_week && habit.days_of_week.includes(todayDayOfWeek)) return true;
+        return false;
+      }) || [];
+
+      const todayHabitCount = todayHabits.length;
 
       // メンバー情報と昨日の達成状況を取得
       const { data: members } = await supabase
