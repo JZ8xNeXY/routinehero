@@ -18,7 +18,9 @@
     "all": "すべて",
     "none": "なし",
     "yes": "はい",
-    "no": "いいえ"
+    "no": "いいえ",
+    "bgmOn": "音楽ON",
+    "bgmOff": "音楽OFF"
   },
   "nav": {
     "menu": "メニュー",
@@ -45,7 +47,14 @@
     "createAccount": "アカウント作成",
     "passwordMismatch": "パスワードが一致しません",
     "invalidEmail": "無効なメールアドレスです",
-    "authError": "認証エラーが発生しました。もう一度お試しください。"
+    "authError": "認証エラーが発生しました。もう一度お試しください。",
+    "rememberMe": "ログイン状態を保持",
+    "getStarted": "はじめましょう",
+    "createYourAccount": "アカウントを作成",
+    "passwordMinLength": "6文字以上入力してください",
+    "creatingAccount": "アカウント作成中...",
+    "accountCreated": "アカウントが作成されました。メールを確認してアカウントを有効化してから、サインインしてください。",
+    "signupFailed": "登録に失敗しました"
   },
   "onboarding": {
     "welcome": "RoutineHeroへようこそ！",
@@ -76,7 +85,22 @@
     "noHabitsMessage": "習慣を追加して始めましょう！",
     "xpEarned": "{name}が{xp} XP獲得！",
     "habitCompleted": "{habit}を完了",
-    "alreadyCompleted": "今日は完了済み"
+    "alreadyCompleted": "今日は完了済み",
+    "nextMission": "次のミッション",
+    "allComplete": "今日のミッションは全て完了しました",
+    "greatWork": "素晴らしい！家族全員が割り当てられた習慣を完了しました。",
+    "missionsRemaining": "{count}個のミッション残り",
+    "leftCount": "残り{count}個",
+    "familyLeaderboard": "家族ランキング",
+    "seeWhoWorking": "誰が一番頑張っているかチェック！",
+    "streak": "連続",
+    "best": "最高",
+    "backToDashboard": "ダッシュボードに戻る",
+    "membersLabel": "メンバー",
+    "totalXpLabel": "合計XP",
+    "bestStreakLabel": "最高連続記録",
+    "avgLevelLabel": "平均レベル",
+    "daysUnit": "{count}日"
   },
   "leaderboard": {
     "title": "ファミリーランキング",
@@ -92,7 +116,7 @@
     "backToDashboard": "ダッシュボードに戻る"
   },
   "members": {
-    "title": "ファミリーメンバー",
+    "title": "メンバー管理",
     "addMember": "メンバー追加",
     "editMember": "メンバー編集",
     "deleteMember": "メンバー削除",
@@ -116,7 +140,8 @@
     "backToMembers": "メンバー一覧に戻る",
     "totalXP": "合計経験値",
     "recentActivity": "最近のアクティビティ",
-    "noActivity": "まだアクティビティがありません。習慣を完了すると表示されます！"
+    "noActivity": "まだアクティビティがありません。習慣を完了すると表示されます！",
+    "subtitle": "家族メンバーを追加、編集、削除します。各メンバーに習慣を割り当てることができます。"
   },
   "habits": {
     "title": "習慣",
@@ -130,7 +155,8 @@
     "xpReward": "経験値報酬",
     "frequency": "頻度",
     "daily": "毎日",
-    "weekly": "週間",
+    "weekly": "毎週",
+    "monthly": "毎月",
     "custom": "カスタム",
     "assignedTo": "担当者",
     "selectMembers": "メンバーを選択",
@@ -148,7 +174,30 @@
     "friday": "金",
     "saturday": "土",
     "sunday": "日",
-    "selectDays": "曜日を選択"
+    "selectDays": "曜日を選択",
+    "selectDaysOfWeek": "曜日を選択：",
+    "markDone": "完了",
+    "completed": "完了済み",
+    "addHabitFor": "{name}の習慣を追加",
+    "editHabitModal": "習慣を編集",
+    "deleteConfirmTitle": "習慣を削除",
+    "deleteConfirmMessage": "この習慣を削除してもよろしいですか？",
+    "deleteExplanation": "この操作により習慣は非アクティブになります。過去の完了データは保持されますが、習慣は日々のリストに表示されなくなります。",
+    "updating": "更新中...",
+    "updateHabit": "習慣を更新",
+    "deleting": "削除中...",
+    "creating": "作成中...",
+    "createHabit": "習慣を作成",
+    "assignedToMember": "この習慣は{name}に割り当てられます。",
+    "xpPerCompletion": "完了ごとに{xp} XP",
+    "characterLimit": "{current}/{max}文字",
+    "xpRange": "1-100 XP",
+    "timeExample": "例：07:00（朝）、20:00（夜）",
+    "habitPlaceholder": "例：ピアノの練習、宿題",
+    "noHabitsForMember": "まだ習慣が割り当てられていません。下の+ボタンをクリックして{name}の習慣を作成してください。",
+    "todaysHabitsCount": "今日の習慣（{count}件）",
+    "manageHabits": "習慣を管理",
+    "manageSubtitle": "習慣を追加、編集、またはアーカイブします。アクティブな習慣がダッシュボードに表示されます。"
   },
   "characters": {
     "ninja": "忍者",
@@ -160,7 +209,11 @@
   },
   "settings": {
     "title": "設定",
+    "subtitle": "アカウントとファミリーの設定を管理",
     "familySettings": "ファミリー設定",
+    "accountInfo": "アカウント情報",
+    "email": "メールアドレス",
+    "legalSupport": "法的情報とサポート",
     "language": "言語",
     "english": "English",
     "japanese": "日本語",
@@ -168,13 +221,327 @@
     "saved": "設定を保存しました",
     "privacy": "プライバシーポリシー",
     "terms": "利用規約",
-    "contact": "お問い合わせ"
+    "contact": "お問い合わせ",
+    "contactSupport": "サポートに連絡",
+    "backToDashboard": "ダッシュボードに戻る",
+    "lineLinkTitle": "LINE通知",
+    "lineLinkDescription": "LINEアカウントを連携して、習慣の30分前にリマインダーを受け取りましょう",
+    "lineLinkConnected": "LINE連携済み",
+    "lineLinkNotConnected": "LINEアカウントを連携してリマインダーを受け取る",
+    "lineLinkGenerate": "コードを生成",
+    "lineLinkCode": "コード",
+    "lineLinkInstructions": "このコードをLINEで gallacyliga に送信してください（有効期限: 10分）",
+    "lineLinkUnlink": "連携を解除",
+    "lineLinkUserId": "LINE User ID",
+    "lineLinkUnlinkConfirm": "LINEアカウントの連携を解除してもよろしいですか？",
+    "lineLinkClose": "閉じる"
   },
   "validation": {
     "required": "この項目は必須です",
     "tooLong": "{max}文字以下にしてください",
     "tooShort": "{min}文字以上入力してください",
     "invalidAge": "年齢は{min}から{max}の間で入力してください",
-    "invalidXP": "経験値は{min}から{max}の間で入力してください"
+    "invalidXP": "経験値は{min}から{max}の間で入力してください",
+    "selectAtLeastOneDay": "少なくとも1つの曜日を選択してください",
+    "titleRequired": "タイトルは必須です",
+    "titleTooLong": "タイトルは50文字以下にしてください",
+    "xpBetween": "経験値は1から100の間で入力してください",
+    "assignAtLeastOneMember": "少なくとも1人のメンバーを割り当ててください"
+  },
+  "celebration": {
+    "levelUp": "レベルアップ！",
+    "congratulations": "おめでとうございます！この調子で頑張りましょう！",
+    "awesome": "素晴らしい！",
+    "xpGained": "+{xp} XP"
+  },
+  "member": {
+    "level": "レベル {level}",
+    "parent": "親",
+    "xpToNextLevel": "{current} / {next} XPでレベル{nextLevel}",
+    "totalXP": "合計経験値",
+    "currentStreak": "現在の連続記録",
+    "habitsToday": "今日の習慣",
+    "days": "{count}日",
+    "completedCount": "{completed} / {total} 完了",
+    "backToDashboard": "ダッシュボードに戻る"
+  },
+  "landing": {
+    "hero": {
+      "title": "家族の習慣を",
+      "titleLine2": "ゲーム化して楽しく継続",
+      "subtitle": "子どもが自分から習慣を続けたくなる。",
+      "subtitleLine2": "RoutineHeroは、家族みんなで楽しみながら",
+      "subtitleLine3": "良い習慣を身につけるアプリです。",
+      "startFree": "無料で始める",
+      "viewFeatures": "機能を見る",
+      "achievement": "完了の達成感",
+      "levelUp": "レベルアップ",
+      "ranking": "家族ランキング",
+      "screenshotAlt": "ダッシュボード",
+      "screenshotPlaceholder": "実際の画面スクリーンショット"
+    },
+    "features": {
+      "title": "子どもが自分から続けたくなる機能",
+      "subtitle": "ゲーミフィケーションの力で、",
+      "subtitleLine2": "習慣づくりを楽しい体験に変えます",
+      "xpSystem": {
+        "title": "XP＆レベルシステム",
+        "description": "習慣を完了するたびにXPを獲得。レベルアップで達成感を味わえます。完了音とアニメーションで、子どもが「もう一回やりたい！」と思う仕組み。"
+      },
+      "streak": {
+        "title": "連続記録（ストリーク）",
+        "description": "毎日続けることで連続記録が伸びていきます。記録を途切れさせたくない気持ちが、継続の原動力に。"
+      },
+      "leaderboard": {
+        "title": "家族ランキング",
+        "description": "家族全員のXPでランキング表示。良い意味での競争心が、みんなのモチベーションを高めます。"
+      },
+      "members": {
+        "title": "メンバー管理",
+        "description": "親と子それぞれのアカウントで管理。子ども一人ひとりに合わせた習慣を設定できます。"
+      },
+      "reminders": {
+        "title": "リマインダー",
+        "description": "設定した時刻に通知でお知らせ。習慣を忘れずに続けられます。（近日対応予定）"
+      },
+      "insights": {
+        "title": "進捗グラフ",
+        "description": "日々の達成率をグラフで可視化。成長が目に見えるから、続けるのが楽しくなります。（近日対応予定）"
+      }
+    },
+    "pricing": {
+      "title": "シンプルな料金プラン",
+      "subtitle": "コーヒー1杯分の価格で、",
+      "subtitleLine2": "家族みんなが使える習慣管理アプリ",
+      "limitedOffer": "🎉 期間限定オファー",
+      "planName": "ファミリープラン",
+      "price": "¥500",
+      "perMonth": "/ 月",
+      "taxIncluded": "税込価格・初月無料",
+      "feature1": "✨ 無制限の習慣作成",
+      "feature2": "👨‍👩‍👧‍👦 家族メンバー無制限",
+      "feature3": "🎵 完了音＆アニメーション",
+      "feature4": "🏆 XP・レベル・ストリークシステム",
+      "feature5": "📊 家族ランキング",
+      "feature6": "📱 全デバイス対応",
+      "feature7": "🔒 安全なデータ管理",
+      "feature8": "💬 サポート対応",
+      "startNow": "今すぐ無料で始める",
+      "cancelAnytime": "いつでもキャンセル可能・クレジットカード不要",
+      "paymentMethods": "💳 対応決済方法",
+      "paymentDetails": "クレジットカード・デビットカード（近日対応予定）",
+      "valueProposition": "☕ 毎日のコーヒー1杯分以下",
+      "perPersonCost": "家族4人なら1人¥125/月"
+    },
+    "cta": {
+      "title": "今日から、家族みんなで",
+      "titleLine2": "良い習慣を始めませんか？",
+      "subtitle": "初月無料・いつでもキャンセル可能",
+      "subtitleLine2": "3分で設定完了、今すぐ始められます",
+      "startFree": "無料で始める",
+      "login": "ログイン"
+    },
+    "socialProof": {
+      "title": "家族の習慣づくりをサポート",
+      "subtitle": "ベータ版として開発中 - 早期アクセス参加者募集中",
+      "stats": {
+        "families": "ベータ版",
+        "familiesLabel": "早期アクセス受付中",
+        "habits": "毎日",
+        "habitsLabel": "楽しく習慣づくり",
+        "streak": "カフェラテ1杯分",
+        "streakLabel": "月額500円で家族全員"
+      },
+      "testimonial1": {
+        "quote": "子どもが自分から「今日の習慣やる！」と言うようになりました。ゲーム感覚で楽しんでいます。",
+        "author": "田中さん（2児の母・ベータテスター）",
+        "rating": "5"
+      },
+      "testimonial2": {
+        "quote": "家族でランキングを競い合うのが楽しい！子どもたちのモチベーションが全然違います。",
+        "author": "佐藤さん（3児の父・ベータテスター）",
+        "rating": "5"
+      },
+      "testimonial3": {
+        "quote": "シンプルで使いやすい。親子で習慣を共有できるのが良いですね。",
+        "author": "鈴木さん（1児の母・ベータテスター）",
+        "rating": "5"
+      },
+      "trust": {
+        "secure": "🔒 セキュア",
+        "secureText": "安全なデータ暗号化",
+        "privacy": "🛡️ プライバシー重視",
+        "privacyText": "個人情報保護",
+        "madeInJapan": "🇯🇵 日本製",
+        "madeInJapanText": "日本の家族向けに設計"
+      }
+    },
+    "howItWorks": {
+      "title": "使い方はとってもシンプル",
+      "subtitle": "4ステップで習慣管理をスタート",
+      "step1": {
+        "title": "アカウント作成",
+        "description": "メールアドレスで簡単登録。3分で完了します。"
+      },
+      "step2": {
+        "title": "メンバー追加",
+        "description": "家族メンバーを追加。親も子も一緒に管理できます。"
+      },
+      "step3": {
+        "title": "習慣を設定",
+        "description": "「歯磨き」「宿題」など、続けたい習慣を登録。XPも設定できます。"
+      },
+      "step4": {
+        "title": "完了して成長",
+        "description": "習慣を完了してXP獲得！レベルアップして楽しく継続。"
+      }
+    },
+    "faq": {
+      "title": "よくある質問",
+      "subtitle": "RoutineHeroについてのご質問",
+      "q1": {
+        "question": "料金はいくらですか？",
+        "answer": "ファミリープランは月額¥500（税込）です。初月は無料でお試しいただけます。いつでもキャンセル可能で、解約金もありません。"
+      },
+      "q2": {
+        "question": "何人まで登録できますか？",
+        "answer": "家族メンバーの登録数に制限はありません。親も子も何人でも追加できます。習慣の数も無制限です。"
+      },
+      "q3": {
+        "question": "スマートフォンでも使えますか？",
+        "answer": "はい、iPhone・Android・タブレット・パソコンなど、すべてのデバイスでご利用いただけます。ブラウザでアクセスするだけなので、アプリのインストールは不要です。"
+      },
+      "q4": {
+        "question": "データは安全ですか？",
+        "answer": "お客様のデータは暗号化され、セキュアなクラウド環境で保護されています。個人情報の取り扱いについては、プライバシーポリシーをご確認ください。"
+      },
+      "q5": {
+        "question": "何歳から使えますか？",
+        "answer": "4歳から14歳のお子様を対象としていますが、年齢制限はありません。親御様がアカウントを管理し、お子様と一緒にご利用ください。"
+      }
+    },
+    "benefits": {
+      "title": "家族全員にメリット",
+      "subtitle": "RoutineHeroは、親にも子にもポジティブな変化をもたらします",
+      "parent": {
+        "title": "親御様にとって",
+        "saveTime": {
+          "title": "毎日の時間を節約",
+          "description": "子どもに何度も声をかける必要がなくなります。自分で管理できるようになり、あなたの時間が増えます。"
+        },
+        "reduceStress": {
+          "title": "日々のストレスを軽減",
+          "description": "「〇〇したの？」と何度も聞くストレスから解放。子どもが自然と習慣をこなすようになり、家庭が平和に。"
+        },
+        "familyHarmony": {
+          "title": "家族の絆を深める",
+          "description": "みんなで達成を喜び、成長を見守る。ポジティブな関わりを通じて、家族の絆が深まります。"
+        }
+      },
+      "child": {
+        "title": "お子様にとって",
+        "learnResponsibility": {
+          "title": "責任感が育つ",
+          "description": "日々の習慣を通じて、自分で自分を管理する力が身につきます。自信にもつながります。"
+        },
+        "earnRewards": {
+          "title": "XPとレベルアップ",
+          "description": "習慣を完了すると即座にご褒美がもらえます。レベルが上がる達成感を味わえます。"
+        },
+        "haveFun": {
+          "title": "習慣が楽しくなる",
+          "description": "毎日のルーティンをゲームに変換。家族と競い合いながら、楽しく続けられます。"
+        }
+      }
+    },
+    "demo": {
+      "title": "RoutineHeroの使い方を見る",
+      "subtitle": "習慣トラッキングとレベルアップがどれだけ簡単か、動画でチェック",
+      "watchDemo": "デモ動画を見る",
+      "demoDescription": "家族がRoutineHeroでより良い習慣を築く様子をご覧ください",
+      "feature1": {
+        "title": "3分で開始",
+        "description": "すぐに始められる"
+      },
+      "feature2": {
+        "title": "子どもが楽しめる",
+        "description": "ゲーム要素満載"
+      },
+      "feature3": {
+        "title": "モバイル対応",
+        "description": "全デバイスで動作"
+      },
+      "tryNow": "RoutineHeroを無料で試す"
+    },
+    "lineIntegration": {
+      "title": "LINE通知で家族全員がスムーズに",
+      "subtitle": "習慣のリマインダーや達成のお祝いを、",
+      "subtitleLine2": "家族がよく使うメッセージアプリで受け取れます",
+      "badge": "日本限定機能",
+      "dailyReminders": {
+        "title": "毎日のリマインダー",
+        "description": "設定した時刻に自動でリマインド。LINEの優しい通知で、習慣を忘れずに続けられます。"
+      },
+      "completionMessages": {
+        "title": "完了のお祝い",
+        "description": "習慣を達成したら即座にお祝いメッセージが届きます。家族みんなで喜びを共有できます。"
+      },
+      "customSchedule": {
+        "title": "カスタムスケジュール",
+        "description": "習慣ごとに異なる通知時刻を設定可能。朝のルーティン、宿題、就寝前の習慣に最適です。"
+      },
+      "parentNotifications": {
+        "title": "親への通知",
+        "description": "子どもが習慣を完了すると、親にも更新が届きます。家を離れていても、つながっていられます。"
+      },
+      "officialAccount": "公式アカウント",
+      "exampleMessage1": "おはようございます！朝のルーティンの時間です！🌅",
+      "exampleMessage2": "「歯磨き」完了、お疲れ様！+10 XPゲット！⭐",
+      "exampleMessage3": "すごい！今日の習慣を全部完了しました！連続記録を伸ばそう！🔥"
+    }
+  },
+  "legal": {
+    "privacy": {
+      "title": "プライバシーポリシー",
+      "lastUpdated": "最終更新日: 2026年2月",
+      "intro": "RoutineHeroは、お客様の個人情報を大切に扱います。",
+      "dataCollection": "収集する情報",
+      "dataCollectionText": "メールアドレス、家族構成、習慣データ",
+      "dataUsage": "情報の利用目的",
+      "dataUsageText": "サービスの提供、改善、サポート対応",
+      "dataSecurity": "セキュリティ",
+      "dataSecurityText": "業界標準の暗号化技術でデータを保護しています",
+      "contact": "お問い合わせ",
+      "contactText": "プライバシーに関するご質問は、support@routinehero.comまでお願いします。"
+    },
+    "settings": {
+      "billing": {
+        "title": "お支払い設定",
+        "subtitle": "プランと請求情報を管理",
+        "currentPlan": "現在のプラン",
+        "freePlan": "無料プラン",
+        "premiumPlan": "プレミアムプラン",
+        "active": "有効",
+        "renewsOn": "次回更新日:",
+        "premiumFeatures": "無制限の習慣、メンバー、BGM、高度な統計",
+        "upgradeToPremium": "プレミアムにアップグレード",
+        "manageBilling": "お支払い情報を管理"
+      }
+    },
+    "terms": {
+      "title": "利用規約",
+      "lastUpdated": "最終更新日: 2026年2月",
+      "intro": "RoutineHeroをご利用いただくにあたり、以下の利用規約に同意していただく必要があります。",
+      "service": "サービスの提供",
+      "serviceText": "当社は、家族向け習慣管理サービスを提供します。",
+      "userResponsibility": "ユーザーの責任",
+      "userResponsibilityText": "アカウントのセキュリティ維持はユーザーの責任となります。",
+      "prohibited": "禁止事項",
+      "prohibitedText": "不正利用、他者への迷惑行為、法令違反は禁止されています。",
+      "termination": "サービスの停止",
+      "terminationText": "利用規約違反の場合、サービスを停止する場合があります。",
+      "changes": "規約の変更",
+      "changesText": "利用規約は予告なく変更される場合があります。"
+    }
   }
 }

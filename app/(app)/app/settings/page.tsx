@@ -5,12 +5,15 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Link from "next/link";
 import type { Database } from "@/types/supabase";
 import SettingsForm from "@/components/settings/SettingsForm";
+import LineLinkSection from "@/components/settings/LineLinkSection";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
 type FamilyRow = Database["public"]["Tables"]["families"]["Row"];
 
 export default async function SettingsPage() {
+  const t = await getTranslations("settings");
   const supabase = (await createClient()) as any;
 
   // Auth check
@@ -51,27 +54,27 @@ export default async function SettingsPage() {
             startIcon={<ArrowBackIcon />}
             variant="outlined"
           >
-            Back to Dashboard
+            {t("backToDashboard")}
           </Button>
         </Stack>
 
         <Typography variant="h4" fontWeight="bold" mb={1}>
-          Settings
+          {t("title")}
         </Typography>
         <Typography variant="body2" color="text.secondary" mb={4}>
-          Manage your account and family preferences
+          {t("subtitle")}
         </Typography>
 
         <Stack spacing={4}>
           {/* Account Info */}
           <Paper elevation={2} sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight="bold" mb={2}>
-              Account Information
+              {t("accountInfo")}
             </Typography>
             <Stack spacing={2}>
               <Box>
                 <Typography variant="body2" color="text.secondary">
-                  Email
+                  {t("email")}
                 </Typography>
                 <Typography variant="body1" fontWeight="600">
                   {user.email}
@@ -83,15 +86,18 @@ export default async function SettingsPage() {
           {/* Family Settings */}
           <Paper elevation={2} sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight="bold" mb={3}>
-              Family Settings
+              {t("familySettings")}
             </Typography>
             <SettingsForm family={family} />
           </Paper>
 
+          {/* LINE Notifications */}
+          <LineLinkSection />
+
           {/* Legal & Support */}
           <Paper elevation={2} sx={{ p: 3 }}>
             <Typography variant="h6" fontWeight="bold" mb={2}>
-              Legal & Support
+              {t("legalSupport")}
             </Typography>
             <Stack spacing={2}>
               <Button
@@ -101,7 +107,7 @@ export default async function SettingsPage() {
                 fullWidth
                 sx={{ justifyContent: "flex-start" }}
               >
-                Privacy Policy
+                {t("privacy")}
               </Button>
               <Button
                 component={Link}
@@ -110,7 +116,7 @@ export default async function SettingsPage() {
                 fullWidth
                 sx={{ justifyContent: "flex-start" }}
               >
-                Terms of Service
+                {t("terms")}
               </Button>
               <Button
                 component={Link}
@@ -119,7 +125,7 @@ export default async function SettingsPage() {
                 fullWidth
                 sx={{ justifyContent: "flex-start" }}
               >
-                Contact Support
+                {t("contactSupport")}
               </Button>
             </Stack>
           </Paper>
