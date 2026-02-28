@@ -234,7 +234,10 @@
     "lineLinkUnlink": "連携を解除",
     "lineLinkUserId": "LINE User ID",
     "lineLinkUnlinkConfirm": "LINEアカウントの連携を解除してもよろしいですか？",
-    "lineLinkClose": "閉じる"
+    "lineLinkClose": "閉じる",
+    "lineLinkStep1": "ステップ1: LINE Botを友だち追加",
+    "lineLinkStep1Description": "まず、RoutineHeroのLINE公式アカウントを友だち追加してください",
+    "lineLinkAddFriend": "友だち追加する"
   },
   "validation": {
     "required": "この項目は必須です",

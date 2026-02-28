@@ -234,7 +234,10 @@
     "lineLinkUnlink": "Disconnect",
     "lineLinkUserId": "LINE User ID",
     "lineLinkUnlinkConfirm": "Are you sure you want to disconnect your LINE account?",
-    "lineLinkClose": "Close"
+    "lineLinkClose": "Close",
+    "lineLinkStep1": "Step 1: Add LINE Bot as Friend",
+    "lineLinkStep1Description": "First, add the RoutineHero LINE official account as a friend",
+    "lineLinkAddFriend": "Add Friend"
   },
   "validation": {
     "required": "This field is required",

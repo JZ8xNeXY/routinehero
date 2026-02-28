@@ -138,6 +138,26 @@ export default function LineLinkSection() {
             {t("lineLinkNotConnected")}
           </Alert>
 
+          {/* Step 1: Add LINE bot as friend */}
+          <Box sx={{ mb: 3, p: 2, bgcolor: "grey.50", borderRadius: 2 }}>
+            <Typography variant="subtitle2" fontWeight="bold" sx={{ mb: 1 }}>
+              {t("lineLinkStep1")}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              {t("lineLinkStep1Description")}
+            </Typography>
+            <Button
+              variant="outlined"
+              href={process.env.NEXT_PUBLIC_LINE_BOT_URL || "https://line.me/R/ti/p/@your-bot-id"}
+              target="_blank"
+              rel="noopener noreferrer"
+              fullWidth
+            >
+              {t("lineLinkAddFriend")}
+            </Button>
+          </Box>
+
+          {/* Step 2: Generate and send code */}
           {token ? (
             <Box sx={{ textAlign: "center", py: 3 }}>
               <Typography
