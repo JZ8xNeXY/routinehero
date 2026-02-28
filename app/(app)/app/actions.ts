@@ -96,32 +96,44 @@ export async function completeHabitForMember(input: CompleteHabitInput) {
     // Calculate streak using family's timezone
     const yesterdayStr = getYesterdayInTimezone(timezone);
 
-    // Check if member completed any habit yesterday
-    const { data: yesterdayLogs } = await supabase
+    // Count total habits completed today (including the one we just logged)
+    const { count: todayCompletedCount } = await supabase
       .from("habit_logs")
-      .select("id")
+      .select("id", { count: "exact", head: true })
       .eq("member_id", member.id)
-      .eq("date", yesterdayStr)
-      .limit(1);
+      .eq("date", today);
 
     let newCurrentStreak = member.current_streak || 0;
     let newLongestStreak = member.longest_streak || 0;
 
-    if (yesterdayLogs && yesterdayLogs.length > 0) {
-      // Continue streak
-      newCurrentStreak += 1;
-    } else if (newCurrentStreak === 0) {
-      // Start new streak
-      newCurrentStreak = 1;
-    } else {
-      // Streak broken, but this is the first habit today
-      newCurrentStreak = 1;
-    }
+    // Only update streak on the first habit completion of the day
+    if (todayCompletedCount === 1) {
+      // This is the first habit completed today
+      // Check if member completed any habit yesterday
+      const { data: yesterdayLogs } = await supabase
+        .from("habit_logs")
+        .select("id")
+        .eq("member_id", member.id)
+        .eq("date", yesterdayStr)
+        .limit(1);
 
-    // Update longest streak if current is higher
-    if (newCurrentStreak > newLongestStreak) {
-      newLongestStreak = newCurrentStreak;
+      if (yesterdayLogs && yesterdayLogs.length > 0) {
+        // Continue streak
+        newCurrentStreak += 1;
+      } else if (newCurrentStreak === 0) {
+        // Start new streak
+        newCurrentStreak = 1;
+      } else {
+        // Streak broken, but this is the first habit today
+        newCurrentStreak = 1;
+      }
+
+      // Update longest streak if current is higher
+      if (newCurrentStreak > newLongestStreak) {
+        newLongestStreak = newCurrentStreak;
+      }
     }
+    // If todayCompletedCount > 1, don't update streak (already updated today)
 
     // Update member stats
     await supabase
