@@ -74,7 +74,7 @@ export default function MemberQuickNav({ members }: MemberQuickNavProps) {
                       sx={{ height: 20, fontSize: "0.7rem" }}
                     />
                   </Box>
-                  {member.current_streak > 0 && (
+                  {(member.current_streak > 0 || member.longest_streak > 0) && (
                     <Stack
                       direction="row"
                       spacing={0.5}
@@ -94,8 +94,16 @@ export default function MemberQuickNav({ members }: MemberQuickNavProps) {
                         fontWeight="600"
                         sx={{ color: "#f97316" }}
                       >
-                        {member.current_streak}
+                        {member.current_streak > 0 ? member.current_streak : 0}
                       </Typography>
+                      {member.longest_streak > member.current_streak && (
+                        <Typography
+                          variant="caption"
+                          sx={{ color: "text.secondary", fontSize: "0.65rem" }}
+                        >
+                          (最高{member.longest_streak})
+                        </Typography>
+                      )}
                     </Stack>
                   )}
                 </Stack>
