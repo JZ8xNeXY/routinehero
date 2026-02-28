@@ -130,7 +130,7 @@ export default async function DashboardPage() {
               {family.family_name}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              {today} · {family.timezone}
+              {today}
             </Typography>
           </Box>
           <DashboardNav />
