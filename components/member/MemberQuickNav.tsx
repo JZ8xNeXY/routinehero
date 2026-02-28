@@ -101,5 +101,6 @@ export default function MemberQuickNav({ members }: MemberQuickNavProps) {
             </Card>
           </Link>
         ))}
+    </Box>
   );
 }
