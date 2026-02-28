@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import crypto from 'crypto';
 
 /**
@@ -59,7 +59,18 @@ export async function POST(request: NextRequest) {
     }
 
     const webhookRequest: LineWebhookRequest = JSON.parse(body);
-    const supabase = await createClient();
+
+    // Webhook uses service role to bypass RLS
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
 
     // 各イベントを処理
     for (const event of webhookRequest.events) {
