@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { sendFamilySummary } from '@/lib/line/client';
+import { getDateInfoInTimezone } from '@/lib/utils/timezone';
 
 /**
  * テスト用: 朝のサマリーを即座に送信
@@ -29,7 +30,8 @@ export async function GET(request: NextRequest) {
         line_user_id,
         family_id,
         families (
-          family_name
+          family_name,
+          timezone
         )
       `)
       .eq('notifications_enabled', true)
@@ -48,14 +50,11 @@ export async function GET(request: NextRequest) {
     for (const setting of lineSettings) {
       const settingData = setting as any;
 
-      const now = new Date();
-      const today = now.toISOString().slice(0, 10);
-      const yesterdayDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      const yesterday = yesterdayDate.toISOString().slice(0, 10);
-      const todayDayOfWeek = now.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
-      const yesterdayDayOfWeek = yesterdayDate.getDay();
+      // Use family's timezone for accurate date calculation
+      const timezone = settingData.families?.timezone || 'UTC';
+      const { today, yesterday, todayDayOfWeek, yesterdayDayOfWeek } = getDateInfoInTimezone(timezone);
 
-      console.log('Processing family:', settingData.family_id);
+      console.log('Processing family:', settingData.family_id, 'Timezone:', timezone, 'Today:', today);
 
       // 今日の習慣数を取得（今日の曜日でフィルタ）
       const { data: allHabits } = await supabase

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { sendFamilySummary } from '@/lib/line/client';
+import { getDateInfoInTimezone } from '@/lib/utils/timezone';
 
 /**
  * 朝のリマインダー送信（Vercel Cron）
@@ -41,7 +42,8 @@ export async function GET(request: NextRequest) {
         morning_reminder_time,
         family_id,
         families (
-          family_name
+          family_name,
+          timezone
         )
       `)
       .eq('notifications_enabled', true)
@@ -57,9 +59,18 @@ export async function GET(request: NextRequest) {
     for (const setting of lineSettings) {
       const settingData = setting as any;
 
-      // 現在時刻と設定時刻を比較（TODO: タイムゾーン対応）
+      // Use family's timezone for accurate date and time calculation
+      const timezone = settingData.families?.timezone || 'UTC';
       const now = new Date();
-      const currentTime = `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+      // Get current time in family's timezone
+      const timeFormatter = new Intl.DateTimeFormat('en-US', {
+        timeZone: timezone,
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+      });
+      const currentTime = timeFormatter.format(now);
 
       // 設定時刻と一致する場合のみ送信（または設定がない場合は8:00に送信）
       const reminderTime = settingData.morning_reminder_time || '08:00';
@@ -67,11 +78,7 @@ export async function GET(request: NextRequest) {
         continue;
       }
 
-      const today = now.toISOString().slice(0, 10);
-      const yesterdayDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-      const yesterday = yesterdayDate.toISOString().slice(0, 10);
-      const todayDayOfWeek = now.getDay(); // 0=Sunday, 1=Monday, ..., 6=Saturday
-      const yesterdayDayOfWeek = yesterdayDate.getDay();
+      const { today, yesterday, todayDayOfWeek, yesterdayDayOfWeek } = getDateInfoInTimezone(timezone);
 
       // 今日の習慣数を取得（今日の曜日でフィルタ）
       const { data: allHabits } = await supabase

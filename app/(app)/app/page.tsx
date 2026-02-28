@@ -6,6 +6,7 @@ import DashboardContent from "@/components/dashboard/DashboardContent";
 import CelebrationEffects from "@/components/celebration/CelebrationEffects";
 import DashboardNav from "@/components/dashboard/DashboardNav";
 import { filterHabitsByDate } from "@/lib/utils/habitFilters";
+import { getTodayInTimezone } from "@/lib/utils/timezone";
 
 export const dynamic = "force-dynamic";
 
@@ -69,7 +70,8 @@ export default async function DashboardPage() {
   const members = (membersError ? [] : memberData || []) as MemberRow[];
   let habits = (habitsError ? [] : habitData || []) as HabitRow[];
 
-  const today = new Date().toISOString().slice(0, 10);
+  // Use family's timezone to get correct "today" date
+  const today = getTodayInTimezone(family.timezone || 'UTC');
 
   // Filter habits based on today's day of week and frequency
   habits = filterHabitsByDate(habits, today);
