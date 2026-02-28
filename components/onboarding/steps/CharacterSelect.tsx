@@ -39,16 +39,9 @@ export default function CharacterSelect({
   onBack,
   onUpdate,
 }: CharacterSelectProps) {
-  // Filter only children (parents don't need characters)
-  const childMembers = data.members.filter(m => m.role === "child");
-  const [currentMemberIndex, setCurrentMemberIndex] = useState(0);
-  const [members, setMembers] = useState(data.members);
-
-  // If no children, skip this step
-  if (childMembers.length === 0) {
-    onNext();
-    return null;
-  }
+  // Skip character selection - not required for children
+  onNext();
+  return null;
 
   const currentMember = childMembers[currentMemberIndex];
   const isLastMember = currentMemberIndex === childMembers.length - 1;

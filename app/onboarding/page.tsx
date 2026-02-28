@@ -14,7 +14,6 @@ const steps = [
   "Family Info",
   "Add Parents",
   "Add Kids",
-  "Characters",
   "Habits",
 ];
 
@@ -81,15 +80,6 @@ export default function OnboardingPage() {
           />
         );
       case 4:
-        return (
-          <CharacterSelect
-            data={formData}
-            onNext={handleNext}
-            onBack={handleBack}
-            onUpdate={updateFormData}
-          />
-        );
-      case 5:
         return (
           <HabitSelect
             data={formData}
