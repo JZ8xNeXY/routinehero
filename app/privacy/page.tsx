@@ -1,10 +1,14 @@
 import { Box, Container, Typography, Paper, Button } from "@mui/material";
 import Link from "next/link";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const t = await getTranslations("legal.privacy");
+  const tCommon = await getTranslations("common");
+
   return (
     <Container maxWidth="md">
       <Box sx={{ py: 4 }}>
@@ -15,112 +19,57 @@ export default function PrivacyPolicyPage() {
           variant="outlined"
           sx={{ mb: 3 }}
         >
-          Back to Settings
+          {tCommon("back")}
         </Button>
 
         <Paper elevation={2} sx={{ p: 4 }}>
           <Typography variant="h3" fontWeight="bold" mb={2}>
-            Privacy Policy
+            {t("title")}
           </Typography>
           <Typography variant="body2" color="text.secondary" mb={4}>
-            Last updated: {new Date().toLocaleDateString()}
+            {t("lastUpdated")}
           </Typography>
 
           <Box sx={{ "& > *": { mb: 3 } }}>
             <Box>
-              <Typography variant="h5" fontWeight="bold" mb={1}>
-                1. Information We Collect
-              </Typography>
               <Typography variant="body1" paragraph>
-                We collect information you provide directly to us when you create an account,
-                including your email address, family name, and habit tracking data.
+                {t("intro")}
               </Typography>
             </Box>
 
             <Box>
               <Typography variant="h5" fontWeight="bold" mb={1}>
-                2. How We Use Your Information
+                {t("dataCollection")}
               </Typography>
               <Typography variant="body1" paragraph>
-                We use the information we collect to:
-              </Typography>
-              <ul>
-                <li>
-                  <Typography variant="body1">Provide, maintain, and improve our services</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Send you technical notices and support messages</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Track and analyze usage patterns</Typography>
-                </li>
-              </ul>
-            </Box>
-
-            <Box>
-              <Typography variant="h5" fontWeight="bold" mb={1}>
-                3. Data Security
-              </Typography>
-              <Typography variant="body1" paragraph>
-                We use industry-standard security measures to protect your data, including
-                encryption and secure authentication through Supabase.
+                {t("dataCollectionText")}
               </Typography>
             </Box>
 
             <Box>
               <Typography variant="h5" fontWeight="bold" mb={1}>
-                4. Data Sharing
+                {t("dataUsage")}
               </Typography>
               <Typography variant="body1" paragraph>
-                We do not sell your personal information. We may share your information only:
+                {t("dataUsageText")}
               </Typography>
-              <ul>
-                <li>
-                  <Typography variant="body1">With your consent</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">To comply with legal obligations</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">With service providers who assist us in operating our service</Typography>
-                </li>
-              </ul>
             </Box>
 
             <Box>
               <Typography variant="h5" fontWeight="bold" mb={1}>
-                5. Your Rights
+                {t("dataSecurity")}
               </Typography>
               <Typography variant="body1" paragraph>
-                You have the right to:
+                {t("dataSecurityText")}
               </Typography>
-              <ul>
-                <li>
-                  <Typography variant="body1">Access your personal data</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Request deletion of your data</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Export your data</Typography>
-                </li>
-                <li>
-                  <Typography variant="body1">Opt-out of marketing communications</Typography>
-                </li>
-              </ul>
             </Box>
 
             <Box>
               <Typography variant="h5" fontWeight="bold" mb={1}>
-                6. Contact Us
+                {t("contact")}
               </Typography>
               <Typography variant="body1">
-                If you have any questions about this Privacy Policy, please contact us through
-                the{" "}
-                <Link href="/contact" style={{ color: "inherit", textDecoration: "underline" }}>
-                  Contact Support
-                </Link>{" "}
-                page.
+                {t("contactText")}
               </Typography>
             </Box>
           </Box>

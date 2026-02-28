@@ -1,5 +1,8 @@
+"use client";
+
 import { Card, CardContent, Chip, Stack, Typography } from "@mui/material";
 import FlagCircleIcon from "@mui/icons-material/FlagCircle";
+import { useTranslations } from "next-intl";
 
 interface NextMissionCardProps {
   remainingCount: number;
@@ -10,6 +13,8 @@ export default function NextMissionCard({
   remainingCount,
   nextMissionLabel,
 }: NextMissionCardProps) {
+  const t = useTranslations("dashboard");
+
   return (
     <Card
       sx={{
@@ -23,20 +28,20 @@ export default function NextMissionCard({
         <Stack direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
           <div>
             <Typography variant="overline" sx={{ opacity: 0.9 }}>
-              Next Mission
+              {t("nextMission")}
             </Typography>
             <Typography variant="h6" fontWeight="700">
-              {nextMissionLabel || "All missions complete for today"}
+              {nextMissionLabel || t("allComplete")}
             </Typography>
             <Typography variant="body2" sx={{ opacity: 0.9 }}>
               {remainingCount === 0
-                ? "Great work. Your family has completed all assigned habits."
-                : `${remainingCount} mission${remainingCount === 1 ? "" : "s"} remaining`}
+                ? t("greatWork")
+                : t("missionsRemaining", { count: remainingCount, plural: remainingCount === 1 ? "" : "s" })}
             </Typography>
           </div>
           <Chip
             icon={<FlagCircleIcon />}
-            label={`${remainingCount} left`}
+            label={t("leftCount", { count: remainingCount })}
             color={remainingCount === 0 ? "success" : "secondary"}
             sx={{
               color: "common.white",

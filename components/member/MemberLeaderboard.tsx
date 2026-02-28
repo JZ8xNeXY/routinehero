@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Paper,
   Box,
@@ -8,6 +10,7 @@ import {
   Chip,
 } from "@mui/material";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import { useTranslations } from "next-intl";
 import type { Database } from "@/types/supabase";
 
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
@@ -44,6 +47,8 @@ function getLevelProgress(xp: number, level: number): number {
 }
 
 export default function MemberLeaderboard({ members }: MemberLeaderboardProps) {
+  const t = useTranslations("dashboard");
+
   // Sort members by XP (descending)
   const sortedMembers = [...members].sort((a, b) => b.total_xp - a.total_xp);
 
@@ -52,7 +57,7 @@ export default function MemberLeaderboard({ members }: MemberLeaderboardProps) {
       <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
         <EmojiEventsIcon color="primary" />
         <Typography variant="h6" fontWeight="bold">
-          Family Leaderboard
+          {t("familyLeaderboard")}
         </Typography>
       </Box>
 
@@ -152,7 +157,7 @@ export default function MemberLeaderboard({ members }: MemberLeaderboardProps) {
                   <Stack direction="row" spacing={3}>
                     <Box>
                       <Typography variant="caption" color="text.secondary">
-                        Streak
+                        {t("streak")}
                       </Typography>
                       <Typography variant="body2" fontWeight="600">
                         🔥 {member.current_streak} days
@@ -160,7 +165,7 @@ export default function MemberLeaderboard({ members }: MemberLeaderboardProps) {
                     </Box>
                     <Box>
                       <Typography variant="caption" color="text.secondary">
-                        Best
+                        {t("best")}
                       </Typography>
                       <Typography variant="body2" fontWeight="600">
                         ⭐ {member.longest_streak} days

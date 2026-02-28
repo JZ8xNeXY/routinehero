@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Box,
   TextField,
@@ -14,6 +15,7 @@ import {
 import SaveIcon from "@mui/icons-material/Save";
 import { updateFamilySettings } from "@/app/(app)/app/settings/actions";
 import type { Database } from "@/types/supabase";
+import { useTranslations } from "next-intl";
 
 type FamilyRow = Database["public"]["Tables"]["families"]["Row"];
 
@@ -35,12 +37,17 @@ const COMMON_TIMEZONES = [
 ];
 
 export default function SettingsForm({ family }: SettingsFormProps) {
+  const t = useTranslations("settings");
+  const tOnboarding = useTranslations("onboarding");
+  const tCommon = useTranslations("common");
+  const router = useRouter();
   const [familyName, setFamilyName] = useState(family.family_name);
   const [locale, setLocale] = useState(family.locale);
   const [timezone, setTimezone] = useState(family.timezone);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const localeChanged = locale !== family.locale;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -57,12 +64,20 @@ export default function SettingsForm({ family }: SettingsFormProps) {
 
     if (result.error) {
       setError(result.error);
+      setLoading(false);
     } else {
       setSuccess(true);
-      setTimeout(() => setSuccess(false), 3000);
-    }
 
-    setLoading(false);
+      // If locale changed, reload the page to apply new language
+      if (localeChanged) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 500);
+      } else {
+        setTimeout(() => setSuccess(false), 3000);
+        setLoading(false);
+      }
+    }
   };
 
   return (
@@ -75,25 +90,25 @@ export default function SettingsForm({ family }: SettingsFormProps) {
 
       {success && (
         <Alert severity="success" sx={{ mb: 2 }}>
-          Settings updated successfully!
+          {t("saved")}
         </Alert>
       )}
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}>
         <TextField
-          label="Family Name"
+          label={tOnboarding("familyName")}
           value={familyName}
           onChange={(e) => setFamilyName(e.target.value)}
           required
           fullWidth
-          helperText="The name displayed on your dashboard"
+          helperText={t("familySettings")}
         />
 
         <FormControl fullWidth>
-          <InputLabel>Language</InputLabel>
+          <InputLabel>{t("language")}</InputLabel>
           <Select
             value={locale}
-            label="Language"
+            label={t("language")}
             onChange={(e) => setLocale(e.target.value)}
           >
             {LANGUAGES.map((lang) => (
@@ -105,10 +120,10 @@ export default function SettingsForm({ family }: SettingsFormProps) {
         </FormControl>
 
         <FormControl fullWidth>
-          <InputLabel>Timezone</InputLabel>
+          <InputLabel>{tOnboarding("timezone")}</InputLabel>
           <Select
             value={timezone}
-            label="Timezone"
+            label={tOnboarding("timezone")}
             onChange={(e) => setTimezone(e.target.value)}
           >
             {COMMON_TIMEZONES.map((tz) => (
@@ -127,7 +142,7 @@ export default function SettingsForm({ family }: SettingsFormProps) {
         fullWidth
         disabled={loading}
       >
-        {loading ? "Saving..." : "Save Changes"}
+        {loading ? `${tCommon("loading")}` : t("save")}
       </Button>
     </Box>
   );

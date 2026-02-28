@@ -1,8 +1,16 @@
-import { Card, CardContent, Button, Chip, Stack, Typography, Avatar } from "@mui/material";
+"use client";
+
+import { useState } from "react";
+import { Card, CardContent, Button, Chip, Stack, Typography, Avatar, IconButton } from "@mui/material";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import type { Database } from "@/types/supabase";
 import { completeHabitForMember } from "@/app/(app)/app/actions";
+import EditHabitModal from "./EditHabitModal";
+import DeleteHabitDialog from "./DeleteHabitDialog";
+import { useTranslations } from "next-intl";
 
 type HabitRow = Database["public"]["Tables"]["habits"]["Row"];
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
@@ -11,59 +19,85 @@ interface HabitCardProps {
   habit: HabitRow;
   members: MemberRow[];
   completedMemberIds: string[];
+  familyId: string;
+  allMembers?: MemberRow[];
 }
 
 export default function HabitCard({
   habit,
   members,
   completedMemberIds,
+  familyId,
+  allMembers,
 }: HabitCardProps) {
+  const t = useTranslations("habits");
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
   const assignedMembers = members.filter((member) => habit.member_ids.includes(member.id));
   const completedCount = assignedMembers.filter((member) =>
     completedMemberIds.includes(member.id)
   ).length;
 
   return (
-    <Card sx={{ border: 1, borderColor: "divider" }}>
-      <CardContent sx={{ p: 2.5 }}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
-          <Stack direction="row" spacing={1.5} alignItems="center">
-            <Typography variant="h5">{habit.icon || "✅"}</Typography>
-            <div>
-              <Typography variant="subtitle1" fontWeight="700">
-                {habit.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {habit.time_of_day && `⏰ ${habit.time_of_day} · `}
-                {habit.xp_reward} XP / completion
-              </Typography>
-            </div>
-          </Stack>
-          <Stack direction="row" alignItems="center" spacing={1}>
-            <Stack direction="row" spacing={0.5}>
-              {assignedMembers.map((member) => (
-                <Avatar
-                  key={member.id}
-                  src={member.avatar_url || undefined}
-                  sx={{
-                    width: 28,
-                    height: 28,
-                    fontSize: "0.75rem",
-                    border: completedMemberIds.includes(member.id) ? "2px solid" : "none",
-                    borderColor: "success.main"
-                  }}
-                >
-                  {member.name[0]?.toUpperCase()}
-                </Avatar>
-              ))}
+    <>
+      <Card sx={{ border: 1, borderColor: "divider" }}>
+        <CardContent sx={{ p: 2.5 }}>
+          <Stack direction="row" alignItems="center" justifyContent="space-between" mb={2}>
+            <Stack direction="row" spacing={1.5} alignItems="center" flex={1}>
+              <Typography variant="h5">{habit.icon || "✅"}</Typography>
+              <div>
+                <Typography variant="subtitle1" fontWeight="700">
+                  {habit.title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  {habit.time_of_day && `⏰ ${habit.time_of_day} · `}
+                  {t("xpPerCompletion", { xp: habit.xp_reward })}
+                </Typography>
+              </div>
             </Stack>
-            <Chip
-              size="small"
-              color={completedCount === assignedMembers.length ? "success" : "default"}
-              label={`${completedCount}/${assignedMembers.length}`}
-            />
+            <Stack direction="row" alignItems="center" spacing={1}>
+              {/* Action buttons */}
+              <IconButton
+                size="small"
+                onClick={() => setEditModalOpen(true)}
+                sx={{ color: "primary.main" }}
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
+              <IconButton
+                size="small"
+                onClick={() => setDeleteDialogOpen(true)}
+                sx={{ color: "error.main" }}
+              >
+                <DeleteIcon fontSize="small" />
+              </IconButton>
+
+              {/* Member avatars and progress */}
+              <Stack direction="row" spacing={0.5}>
+                {assignedMembers.map((member) => (
+                  <Avatar
+                    key={member.id}
+                    src={member.avatar_url || undefined}
+                    sx={{
+                      width: 28,
+                      height: 28,
+                      fontSize: "0.75rem",
+                      border: completedMemberIds.includes(member.id) ? "2px solid" : "none",
+                      borderColor: "success.main"
+                    }}
+                  >
+                    {member.name[0]?.toUpperCase()}
+                  </Avatar>
+                ))}
+              </Stack>
+              <Chip
+                size="small"
+                color={completedCount === assignedMembers.length ? "success" : "default"}
+                label={`${completedCount}/${assignedMembers.length}`}
+              />
+            </Stack>
           </Stack>
-        </Stack>
 
         <Stack spacing={1}>
           {assignedMembers.map((member) => {
@@ -106,7 +140,7 @@ export default function HabitCard({
                     disabled
                     startIcon={<CheckCircleIcon />}
                   >
-                    Completed
+                    {t("completed")}
                   </Button>
                 ) : (
                   <form action={action}>
@@ -116,7 +150,7 @@ export default function HabitCard({
                       variant="outlined"
                       startIcon={<RadioButtonUncheckedIcon />}
                     >
-                      Mark Done
+                      {t("markDone")}
                     </Button>
                   </form>
                 )}
@@ -126,5 +160,25 @@ export default function HabitCard({
         </Stack>
       </CardContent>
     </Card>
+
+    {/* Edit Modal */}
+    {allMembers && (
+      <EditHabitModal
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        habit={habit}
+        allMembers={allMembers}
+      />
+    )}
+
+    {/* Delete Dialog */}
+    <DeleteHabitDialog
+      open={deleteDialogOpen}
+      onClose={() => setDeleteDialogOpen(false)}
+      habitId={habit.id}
+      habitTitle={habit.title}
+      familyId={familyId}
+    />
+  </>
   );
 }

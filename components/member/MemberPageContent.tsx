@@ -21,9 +21,14 @@ import Link from "next/link";
 import type { Database } from "@/types/supabase";
 import HabitCard from "@/components/habit/HabitCard";
 import QuickHabitModal from "@/components/habit/QuickHabitModal";
+import StatsSection from "@/components/member/StatsSection";
+import CalendarView from "@/components/member/CalendarView";
+import AchievementsSection from "@/components/member/AchievementsSection";
+import { useTranslations } from "next-intl";
 
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 type HabitRow = Database["public"]["Tables"]["habits"]["Row"];
+type HabitLogRow = Database["public"]["Tables"]["habit_logs"]["Row"];
 
 interface MemberPageContentProps {
   member: MemberRow;
@@ -35,6 +40,8 @@ interface MemberPageContentProps {
   completionPercentage: number;
   xpForNextLevel: number;
   xpProgress: number;
+  allMembers: MemberRow[];
+  allLogs: HabitLogRow[];
 }
 
 export default function MemberPageContent({
@@ -46,7 +53,11 @@ export default function MemberPageContent({
   totalHabitsToday,
   xpForNextLevel,
   xpProgress,
+  allMembers,
+  allLogs,
 }: MemberPageContentProps) {
+  const t = useTranslations("member");
+  const tHabits = useTranslations("habits");
   const [modalOpen, setModalOpen] = useState(false);
 
   return (
@@ -58,7 +69,7 @@ export default function MemberPageContent({
           sx={{ mb: 3 }}
           color="inherit"
         >
-          Back to Dashboard
+          {t("backToDashboard")}
         </Button>
       </Link>
 
@@ -77,13 +88,13 @@ export default function MemberPageContent({
                 {member.name}
               </Typography>
               <Chip
-                label={`Level ${member.level}`}
+                label={t("level", { level: member.level })}
                 color="primary"
                 size="small"
               />
               {member.role === "parent" && (
                 <Chip
-                  label="Parent"
+                  label={t("parent")}
                   color="secondary"
                   size="small"
                   variant="outlined"
@@ -91,7 +102,7 @@ export default function MemberPageContent({
               )}
             </Stack>
             <Typography variant="body2" color="text.secondary" mb={2}>
-              {member.total_xp} / {xpForNextLevel} XP to Level {member.level + 1}
+              {t("xpToNextLevel", { current: member.total_xp, next: xpForNextLevel, nextLevel: member.level + 1 })}
             </Typography>
             <LinearProgress
               variant="determinate"
@@ -119,7 +130,7 @@ export default function MemberPageContent({
             <StarsIcon color="secondary" />
             <div>
               <Typography variant="caption" color="text.secondary">
-                Total XP
+                {t("totalXP")}
               </Typography>
               <Typography variant="subtitle1" fontWeight="700">
                 {member.total_xp}
@@ -131,10 +142,10 @@ export default function MemberPageContent({
             <LocalFireDepartmentIcon sx={{ color: "#f97316" }} />
             <div>
               <Typography variant="caption" color="text.secondary">
-                Current Streak
+                {t("currentStreak")}
               </Typography>
               <Typography variant="subtitle1" fontWeight="700">
-                {member.current_streak} days
+                {t("days", { count: member.current_streak })}
               </Typography>
             </div>
           </Stack>
@@ -143,19 +154,39 @@ export default function MemberPageContent({
             <CheckCircleIcon sx={{ color: "#22c55e" }} />
             <div>
               <Typography variant="caption" color="text.secondary">
-                Habits Today
+                {t("habitsToday")}
               </Typography>
               <Typography variant="subtitle1" fontWeight="700">
-                {completedToday} / {totalHabitsToday} completed
+                {t("completedCount", { completed: completedToday, total: totalHabitsToday })}
               </Typography>
             </div>
           </Stack>
         </Stack>
       </Paper>
 
+      {/* Stats Section */}
+      <StatsSection
+        logs={allLogs}
+        totalHabits={totalHabitsToday}
+        currentStreak={member.current_streak || 0}
+        longestStreak={member.longest_streak || 0}
+      />
+
+      {/* Calendar View */}
+      <CalendarView logs={allLogs} memberName={member.name} />
+
+      {/* Achievements */}
+      <AchievementsSection
+        totalXP={member.total_xp || 0}
+        currentStreak={member.current_streak || 0}
+        longestStreak={member.longest_streak || 0}
+        totalCompleted={allLogs.length}
+        level={member.level || 1}
+      />
+
       {/* Habits section */}
       <Typography variant="h6" mb={2}>
-        Today&apos;s Habits ({habits.length})
+        {tHabits("todaysHabitsCount", { count: habits.length })}
       </Typography>
 
       {habits.length === 0 ? (
@@ -169,7 +200,7 @@ export default function MemberPageContent({
           }}
         >
           <Typography variant="body2" color="text.secondary" mb={2}>
-            No habits assigned yet. Click the + button below to create a habit for {member.name}.
+            {tHabits("noHabitsForMember", { name: member.name })}
           </Typography>
         </Paper>
       ) : (
@@ -180,6 +211,8 @@ export default function MemberPageContent({
               habit={habit}
               members={[member]}
               completedMemberIds={completedByHabit[habit.id] || []}
+              familyId={familyId}
+              allMembers={allMembers}
             />
           ))}
         </Box>

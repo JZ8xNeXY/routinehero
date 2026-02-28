@@ -1,7 +1,10 @@
+"use client";
+
 import { Paper, Stack, Typography } from "@mui/material";
 import StarsIcon from "@mui/icons-material/Stars";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import GroupsIcon from "@mui/icons-material/Groups";
+import { useTranslations } from "next-intl";
 import type { Database } from "@/types/supabase";
 
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
@@ -11,6 +14,8 @@ interface FamilyStatusBarProps {
 }
 
 export default function FamilyStatusBar({ members }: FamilyStatusBarProps) {
+  const t = useTranslations("dashboard");
+
   const totalXp = members.reduce((sum, member) => sum + member.total_xp, 0);
   const bestStreak = members.reduce(
     (max, member) => Math.max(max, member.current_streak),
@@ -33,7 +38,7 @@ export default function FamilyStatusBar({ members }: FamilyStatusBarProps) {
           <GroupsIcon color="primary" />
           <div>
             <Typography variant="caption" color="text.secondary">
-              Members
+              {t("membersLabel")}
             </Typography>
             <Typography variant="subtitle1" fontWeight="700">
               {members.length}
@@ -45,7 +50,7 @@ export default function FamilyStatusBar({ members }: FamilyStatusBarProps) {
           <StarsIcon color="secondary" />
           <div>
             <Typography variant="caption" color="text.secondary">
-              Total XP
+              {t("totalXpLabel")}
             </Typography>
             <Typography variant="subtitle1" fontWeight="700">
               {totalXp}
@@ -57,10 +62,10 @@ export default function FamilyStatusBar({ members }: FamilyStatusBarProps) {
           <LocalFireDepartmentIcon sx={{ color: "#f97316" }} />
           <div>
             <Typography variant="caption" color="text.secondary">
-              Best Streak
+              {t("bestStreakLabel")}
             </Typography>
             <Typography variant="subtitle1" fontWeight="700">
-              {bestStreak} days
+              {t("daysUnit", { count: bestStreak })}
             </Typography>
           </div>
         </Stack>
@@ -69,7 +74,7 @@ export default function FamilyStatusBar({ members }: FamilyStatusBarProps) {
           <StarsIcon sx={{ color: "#22c55e" }} />
           <div>
             <Typography variant="caption" color="text.secondary">
-              Avg Level
+              {t("avgLevelLabel")}
             </Typography>
             <Typography variant="subtitle1" fontWeight="700">
               {averageLevel}

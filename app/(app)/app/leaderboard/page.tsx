@@ -5,12 +5,15 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Link from "next/link";
 import type { Database } from "@/types/supabase";
 import MemberLeaderboard from "@/components/member/MemberLeaderboard";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 
 export default async function LeaderboardPage() {
+  const t = await getTranslations("dashboard");
+  const tSettings = await getTranslations("settings");
   const supabase = (await createClient()) as any;
 
   // Auth check
@@ -28,7 +31,7 @@ export default async function LeaderboardPage() {
     redirect("/login");
   }
 
-  // Get family
+  // Get family and members in parallel (after auth check)
   const { data: familyData, error: familyError } = await supabase
     .from("families")
     .select("*")
@@ -58,15 +61,15 @@ export default async function LeaderboardPage() {
             startIcon={<ArrowBackIcon />}
             variant="outlined"
           >
-            Back to Dashboard
+            {tSettings("backToDashboard")}
           </Button>
         </Stack>
 
         <Typography variant="h4" fontWeight="bold" mb={1}>
-          Family Leaderboard
+          {t("familyLeaderboard")}
         </Typography>
         <Typography variant="body2" color="text.secondary" mb={4}>
-          See who&apos;s working hardest on their habits! Maybe it&apos;s the kids? 🏆
+          {t("seeWhoWorking")}
         </Typography>
 
         <MemberLeaderboard members={members} />

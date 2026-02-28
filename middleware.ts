@@ -2,8 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  // Determine locale (default to 'en', check cookie for preference)
-  const locale = request.cookies.get("NEXT_LOCALE")?.value || "en";
+  // Determine locale (default to 'ja', check cookie for preference)
+  const locale = request.cookies.get("NEXT_LOCALE")?.value || "ja";
 
   let response = NextResponse.next({
     request: {

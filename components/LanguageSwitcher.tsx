@@ -2,7 +2,7 @@
 
 import { useRouter, usePathname } from "next/navigation";
 import { useLocale } from "next-intl";
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { Select, MenuItem, FormControl } from "@mui/material";
 
 export default function LanguageSwitcher() {
   const router = useRouter();
@@ -22,11 +22,24 @@ export default function LanguageSwitcher() {
 
   return (
     <FormControl size="small" sx={{ minWidth: 120 }}>
-      <InputLabel>Language</InputLabel>
       <Select
         value={locale}
-        label="Language"
         onChange={(e) => handleLanguageChange(e.target.value)}
+        sx={{
+          color: "inherit",
+          ".MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(255, 255, 255, 0.3)",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(255, 255, 255, 0.5)",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(255, 255, 255, 0.7)",
+          },
+          ".MuiSvgIcon-root": {
+            color: "inherit",
+          },
+        }}
       >
         <MenuItem value="en">English</MenuItem>
         <MenuItem value="ja">日本語</MenuItem>

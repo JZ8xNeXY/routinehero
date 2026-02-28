@@ -1,0 +1,14 @@
+{
+  "dashboard": {
+    "nextMission": "Next Mission",
+    "allComplete": "All missions complete for today",
+    "greatWork": "Great work. Your family has completed all assigned habits.",
+    "missionsRemaining": "{count} mission{plural} remaining",
+    "leftCount": "{count} left",
+    "familyLeaderboard": "Family Leaderboard",
+    "seeWhoWorking": "See who's working hardest on their habits!",
+    "streak": "Streak",
+    "best": "Best",
+    "backToDashboard": "Back to Dashboard"
+  }
+}

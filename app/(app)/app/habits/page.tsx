@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { Database } from "@/types/supabase";
 import HabitForm from "@/components/habit/HabitForm";
 import HabitList from "@/components/habit/HabitList";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,8 @@ type HabitRow = Database["public"]["Tables"]["habits"]["Row"];
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 
 export default async function HabitsPage() {
+  const t = await getTranslations("habits");
+  const tSettings = await getTranslations("settings");
   const supabase = (await createClient()) as any;
 
   // Auth check
@@ -69,15 +72,15 @@ export default async function HabitsPage() {
             startIcon={<ArrowBackIcon />}
             variant="outlined"
           >
-            Back to Dashboard
+            {tSettings("backToDashboard")}
           </Button>
         </Stack>
 
         <Typography variant="h4" fontWeight="bold" mb={1}>
-          Manage Habits
+          {t("manageHabits")}
         </Typography>
         <Typography variant="body2" color="text.secondary" mb={4}>
-          Add, edit, or archive habits. Active habits appear on the dashboard.
+          {t("manageSubtitle")}
         </Typography>
 
         <Stack spacing={4}>

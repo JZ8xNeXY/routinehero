@@ -16,8 +16,10 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { useTranslations } from "next-intl";
 
 export default function SignupPage() {
+  const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -32,12 +34,12 @@ export default function SignupPage() {
     setSuccessMessage("");
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      setError(t("passwordMismatch"));
       return;
     }
 
     if (password.length < 6) {
-      setError("Password must be at least 6 characters");
+      setError(t("passwordMinLength"));
       return;
     }
 
@@ -56,16 +58,14 @@ export default function SignupPage() {
       if (error) throw error;
 
       if (!data.session) {
-        setSuccessMessage(
-          "Account created. Check your email to confirm your account, then sign in."
-        );
+        setSuccessMessage(t("accountCreated"));
         return;
       }
 
       // Force full page reload to ensure middleware picks up the new session
       window.location.href = "/onboarding";
     } catch (err: any) {
-      setError(err.message || "Signup failed");
+      setError(err.message || t("signupFailed"));
     } finally {
       setLoading(false);
     }
@@ -83,7 +83,7 @@ export default function SignupPage() {
 
       if (error) throw error;
     } catch (err: any) {
-      setError(err.message || "Google signup failed");
+      setError(err.message || t("signupFailed"));
     }
   };
 
@@ -99,10 +99,10 @@ export default function SignupPage() {
       >
         <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
           <Typography variant="h4" component="h1" fontWeight="bold" mb={1}>
-            Get started
+            {t("getStarted")}
           </Typography>
           <Typography variant="body2" color="text.secondary" mb={4}>
-            Create your RoutineHero account
+            {t("createYourAccount")}
           </Typography>
 
           {error && (
@@ -125,7 +125,7 @@ export default function SignupPage() {
             onClick={handleGoogleSignup}
             sx={{ mb: 3 }}
           >
-            Continue with Google
+            {t("signInWithGoogle")}
           </Button>
 
           <Divider sx={{ mb: 3 }}>or</Divider>
@@ -133,7 +133,7 @@ export default function SignupPage() {
           <Box component="form" onSubmit={handleSignup}>
             <TextField
               fullWidth
-              label="Email"
+              label={t("email")}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -143,18 +143,18 @@ export default function SignupPage() {
             />
             <TextField
               fullWidth
-              label="Password"
+              label={t("password")}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               margin="normal"
               autoComplete="new-password"
-              helperText="At least 6 characters"
+              helperText={t("passwordMinLength")}
             />
             <TextField
               fullWidth
-              label="Confirm Password"
+              label={t("confirmPassword")}
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -171,13 +171,13 @@ export default function SignupPage() {
               disabled={loading}
               sx={{ mt: 3, mb: 2 }}
             >
-              {loading ? "Creating account..." : "Create Account"}
+              {loading ? t("creatingAccount") : t("createAccount")}
             </Button>
 
             <Typography variant="body2" textAlign="center" color="text.secondary">
-              Already have an account?{" "}
+              {t("hasAccount")}{" "}
               <MuiLink component={Link} href="/login" fontWeight="600">
-                Sign in
+                {t("signIn")}
               </MuiLink>
             </Typography>
           </Box>

@@ -46,7 +46,7 @@ export async function completeHabitForMember(input: CompleteHabitInput) {
 
   const { data: member } = await supabase
     .from("members")
-    .select("id, family_id, total_xp, current_streak, longest_streak")
+    .select("id, family_id, total_xp, level, current_streak, longest_streak")
     .eq("id", input.memberId)
     .maybeSingle();
 
@@ -80,9 +80,14 @@ export async function completeHabitForMember(input: CompleteHabitInput) {
   }
 
   // Update member's XP, level, and streak if habit was completed
+  let leveledUp = false;
+  let newLevel = member.level || 1;
+
   if (xpEarned > 0) {
+    const oldLevel = member.level || 1;
     const newTotalXp = (member.total_xp || 0) + xpEarned;
-    const newLevel = calculateLevel(newTotalXp);
+    newLevel = calculateLevel(newTotalXp);
+    leveledUp = newLevel > oldLevel;
 
     // Calculate streak
     const yesterday = new Date();
@@ -136,6 +141,12 @@ export async function completeHabitForMember(input: CompleteHabitInput) {
     member: input.memberName,
     habit: habit.title as string,
   });
+
+  // Add level up information if applicable
+  if (leveledUp) {
+    params.set("levelUp", "true");
+    params.set("newLevel", String(newLevel));
+  }
 
   redirect(`/app?${params.toString()}`);
 }

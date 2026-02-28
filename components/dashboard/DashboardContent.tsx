@@ -14,12 +14,14 @@ import NextMissionCard from "@/components/dashboard/NextMissionCard";
 import FamilyStatusBar from "@/components/member/FamilyStatusBar";
 import MemberQuickNav from "@/components/member/MemberQuickNav";
 import HabitCard from "@/components/habit/HabitCard";
+import { useTranslations } from "next-intl";
 
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 type HabitRow = Database["public"]["Tables"]["habits"]["Row"];
 
 interface DashboardContentProps {
   family: {
+    id: string;
     family_name: string;
     timezone: string;
   };
@@ -36,6 +38,8 @@ export default function DashboardContent({
   completedByHabit,
   today,
 }: DashboardContentProps) {
+  const t = useTranslations("dashboard");
+  const tMembers = useTranslations("members");
   const [selectedMemberId, setSelectedMemberId] = useState<string>("all");
 
   // Filter habits based on selected member
@@ -67,16 +71,16 @@ export default function DashboardContent({
       <MemberQuickNav members={members} />
 
       <FormControl size="small" sx={{ mb: 3, minWidth: 200 }}>
-        <InputLabel>Filter by Member</InputLabel>
+        <InputLabel>{t("filterByMember")}</InputLabel>
         <Select
           value={selectedMemberId}
           onChange={(e) => setSelectedMemberId(e.target.value)}
-          label="Filter by Member"
+          label={t("filterByMember")}
         >
-          <MenuItem value="all">All Members</MenuItem>
+          <MenuItem value="all">{t("allMembers")}</MenuItem>
           {members.map((m) => (
             <MenuItem key={m.id} value={m.id}>
-              {m.name} {m.role === "parent" ? "(Parent)" : ""}
+              {m.name} {m.role === "parent" ? `(${tMembers("parent")})` : ""}
             </MenuItem>
           ))}
         </Select>
@@ -90,7 +94,7 @@ export default function DashboardContent({
       />
 
       <Typography variant="h6" mb={2}>
-        Today&apos;s Habits ({filteredHabits.length})
+        {t("todaysHabits")} ({filteredHabits.length})
       </Typography>
 
       <Box sx={{ display: "grid", gridTemplateColumns: "1fr", gap: 2 }}>
@@ -100,6 +104,8 @@ export default function DashboardContent({
             habit={habit}
             members={members}
             completedMemberIds={completedByHabit[habit.id] || []}
+            familyId={family.id}
+            allMembers={members}
           />
         ))}
       </Box>
@@ -107,8 +113,8 @@ export default function DashboardContent({
       {filteredHabits.length === 0 && (
         <Typography variant="body2" color="text.secondary" sx={{ py: 4 }}>
           {selectedMemberId === "all"
-            ? "No active habits found. Complete onboarding to add habits."
-            : "No habits assigned to this member."}
+            ? t("noHabitsMessage")
+            : t("noHabitsToday")}
         </Typography>
       )}
     </>

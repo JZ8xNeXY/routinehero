@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Box, Container } from "@mui/material";
 import type { Database } from "@/types/supabase";
-import XPPopup from "@/components/dashboard/XPPopup";
+import CelebrationEffects from "@/components/celebration/CelebrationEffects";
 import MemberPageContent from "@/components/member/MemberPageContent";
 import { filterHabitsByDate } from "@/lib/utils/habitFilters";
 
@@ -48,26 +48,36 @@ export default async function MemberPage({ params }: MemberPageProps) {
 
   const family = familyData;
 
-  // Get member and validate it belongs to this family
-  const { data: memberData, error: memberError } = await supabase
-    .from("members")
-    .select("*")
-    .eq("id", memberId)
-    .maybeSingle();
+  // Get all data in parallel
+  const [
+    { data: allMembersData },
+    { data: memberData, error: memberError },
+    { data: habitData, error: habitsError }
+  ] = await Promise.all([
+    supabase
+      .from("members")
+      .select("*")
+      .eq("family_id", family.id)
+      .order("display_order"),
+    supabase
+      .from("members")
+      .select("*")
+      .eq("id", memberId)
+      .maybeSingle(),
+    supabase
+      .from("habits")
+      .select("*")
+      .eq("family_id", family.id)
+      .eq("is_active", true)
+      .order("display_order")
+  ]);
 
+  const allMembers = (allMembersData || []) as MemberRow[];
   const member = memberData as MemberRow | null;
 
   if (memberError || !member || member.family_id !== family.id) {
     redirect("/app");
   }
-
-  // Get habits assigned to this member
-  const { data: habitData, error: habitsError } = await supabase
-    .from("habits")
-    .select("*")
-    .eq("family_id", family.id)
-    .eq("is_active", true)
-    .order("display_order");
 
   let habits = (habitsError ? [] : habitData || []) as HabitRow[];
 
@@ -99,6 +109,20 @@ export default async function MemberPage({ params }: MemberPageProps) {
 
   const logs = (logsError ? [] : logData || []) as HabitLogRow[];
 
+  // Get all habit logs for stats and calendar (last 90 days)
+  const ninetyDaysAgo = new Date();
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+  const ninetyDaysAgoStr = ninetyDaysAgo.toISOString().slice(0, 10);
+
+  const { data: allLogsData } = await supabase
+    .from("habit_logs")
+    .select("*")
+    .eq("member_id", member.id)
+    .gte("date", ninetyDaysAgoStr)
+    .order("date", { ascending: false });
+
+  const allLogs = (allLogsData || []) as HabitLogRow[];
+
   // Build completed habit IDs array
   const completedHabitIds = logs.map((log) => log.habit_id);
 
@@ -124,7 +148,7 @@ export default async function MemberPage({ params }: MemberPageProps) {
   return (
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
-        <XPPopup />
+        <CelebrationEffects />
         <MemberPageContent
           member={member}
           habits={habits}
@@ -135,6 +159,8 @@ export default async function MemberPage({ params }: MemberPageProps) {
           completionPercentage={completionPercentage}
           xpForNextLevel={xpForNextLevel}
           xpProgress={xpProgress}
+          allMembers={allMembers}
+          allLogs={allLogs}
         />
       </Box>
     </Container>

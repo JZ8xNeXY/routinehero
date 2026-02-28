@@ -3,7 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import type { Database } from "@/types/supabase";
 import DashboardContent from "@/components/dashboard/DashboardContent";
-import XPPopup from "@/components/dashboard/XPPopup";
+import CelebrationEffects from "@/components/celebration/CelebrationEffects";
 import DashboardNav from "@/components/dashboard/DashboardNav";
 import { filterHabitsByDate } from "@/lib/utils/habitFilters";
 
@@ -48,23 +48,25 @@ export default async function DashboardPage() {
     redirect("/onboarding");
   }
 
-  // Get family members
-  const { data: memberData, error: membersError } = await supabase
-    .from("members")
-    .select("*")
-    .eq("family_id", family.id)
-    .order("display_order");
+  // Get family members and habits in parallel
+  const [
+    { data: memberData, error: membersError },
+    { data: habitData, error: habitsError }
+  ] = await Promise.all([
+    supabase
+      .from("members")
+      .select("*")
+      .eq("family_id", family.id)
+      .order("display_order"),
+    supabase
+      .from("habits")
+      .select("*")
+      .eq("family_id", family.id)
+      .eq("is_active", true)
+      .order("display_order")
+  ]);
 
   const members = (membersError ? [] : memberData || []) as MemberRow[];
-
-  // Get habits
-  const { data: habitData, error: habitsError } = await supabase
-    .from("habits")
-    .select("*")
-    .eq("family_id", family.id)
-    .eq("is_active", true)
-    .order("display_order");
-
   let habits = (habitsError ? [] : habitData || []) as HabitRow[];
 
   const today = new Date().toISOString().slice(0, 10);
@@ -115,7 +117,7 @@ export default async function DashboardPage() {
   return (
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
-        <XPPopup />
+        <CelebrationEffects />
 
         <Stack
           direction="row"

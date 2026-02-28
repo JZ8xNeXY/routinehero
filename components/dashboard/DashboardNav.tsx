@@ -22,6 +22,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function DashboardNav() {
   const router = useRouter();
@@ -97,6 +98,13 @@ export default function DashboardNav() {
               </ListItem>
             ))}
           </List>
+
+          <Divider />
+
+          {/* Language Switcher */}
+          <Box sx={{ p: 2 }}>
+            <LanguageSwitcher />
+          </Box>
 
           <Divider />
 

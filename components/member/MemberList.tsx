@@ -39,6 +39,7 @@ import Link from "next/link";
 import { updateMember, deleteMember } from "@/app/(app)/app/members/actions";
 import { uploadMemberAvatar } from "@/lib/supabase/storage";
 import type { Database } from "@/types/supabase";
+import { useTranslations } from "next-intl";
 
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 
@@ -57,6 +58,7 @@ const characters = [
 ];
 
 export default function MemberList({ members, familyId }: MemberListProps) {
+  const tMembers = useTranslations("members");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [editAge, setEditAge] = useState("");
@@ -213,7 +215,7 @@ export default function MemberList({ members, familyId }: MemberListProps) {
                   startIcon={<PhotoCameraIcon />}
                   disabled={uploadingAvatar}
                 >
-                  {uploadingAvatar ? "Uploading..." : "Upload Photo"}
+                  {uploadingAvatar ? tMembers("uploading") : tMembers("uploadPhoto")}
                   <input
                     type="file"
                     hidden

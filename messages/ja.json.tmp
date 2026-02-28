@@ -1,0 +1,14 @@
+{
+  "dashboard": {
+    "nextMission": "次のミッション",
+    "allComplete": "今日のミッションは全て完了しました",
+    "greatWork": "素晴らしい！家族全員が割り当てられた習慣を完了しました。",
+    "missionsRemaining": "{count}個のミッション残り",
+    "leftCount": "残り{count}個",
+    "familyLeaderboard": "家族ランキング",
+    "seeWhoWorking": "誰が一番頑張っているかチェック！",
+    "streak": "連続",
+    "best": "最高",
+    "backToDashboard": "ダッシュボードに戻る"
+  }
+}

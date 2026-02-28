@@ -17,6 +17,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import { createHabit } from "@/app/(app)/app/habits/actions";
 import type { Database } from "@/types/supabase";
+import { useTranslations } from "next-intl";
 
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 
@@ -26,16 +27,17 @@ interface HabitFormProps {
 }
 
 const DAYS_OF_WEEK = [
-  { value: 1, label: "Mon", fullLabel: "Monday" },
-  { value: 2, label: "Tue", fullLabel: "Tuesday" },
-  { value: 3, label: "Wed", fullLabel: "Wednesday" },
-  { value: 4, label: "Thu", fullLabel: "Thursday" },
-  { value: 5, label: "Fri", fullLabel: "Friday" },
-  { value: 6, label: "Sat", fullLabel: "Saturday" },
-  { value: 0, label: "Sun", fullLabel: "Sunday" },
-];
+  { value: 1, key: "monday" },
+  { value: 2, key: "tuesday" },
+  { value: 3, key: "wednesday" },
+  { value: 4, key: "thursday" },
+  { value: 5, key: "friday" },
+  { value: 6, key: "saturday" },
+  { value: 0, key: "sunday" },
+] as const;
 
 export default function HabitForm({ familyId, members }: HabitFormProps) {
+  const t = useTranslations("habits");
   const [title, setTitle] = useState("");
   const [icon, setIcon] = useState("✅");
   const [xpReward, setXpReward] = useState("10");
@@ -125,7 +127,7 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
   return (
     <Box component="form" onSubmit={handleSubmit}>
       <Typography variant="h6" fontWeight="bold" mb={2}>
-        Add New Habit
+        {t("addHabit")}
       </Typography>
 
       {error && (
@@ -136,17 +138,17 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
 
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mb: 3 }}>
         <TextField
-          label="Habit Title"
+          label={t("habitTitle")}
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
           fullWidth
-          placeholder="e.g., Brush Teeth, Do Homework"
+          placeholder={t("habitPlaceholder")}
         />
 
         <Box sx={{ display: "flex", gap: 2 }}>
           <TextField
-            label="Icon (Emoji)"
+            label={t("icon")}
             value={icon}
             onChange={(e) => setIcon(e.target.value)}
             sx={{ width: 100 }}
@@ -154,7 +156,7 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
           />
 
           <TextField
-            label="XP Reward"
+            label={t("xpReward")}
             type="number"
             value={xpReward}
             onChange={(e) => setXpReward(e.target.value)}
@@ -163,10 +165,10 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
           />
 
           <FormControl sx={{ flex: 1 }}>
-            <InputLabel>Frequency</InputLabel>
+            <InputLabel>{t("frequency")}</InputLabel>
             <Select
               value={frequency}
-              label="Frequency"
+              label={t("frequency")}
               onChange={(e) => {
                 setFrequency(e.target.value);
                 if (e.target.value !== "weekly") {
@@ -174,9 +176,9 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
                 }
               }}
             >
-              <MenuItem value="daily">Daily</MenuItem>
-              <MenuItem value="weekly">Weekly</MenuItem>
-              <MenuItem value="monthly">Monthly</MenuItem>
+              <MenuItem value="daily">{t("daily")}</MenuItem>
+              <MenuItem value="weekly">{t("weekly")}</MenuItem>
+              <MenuItem value="monthly">{t("monthly")}</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -184,7 +186,7 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
         {frequency === "weekly" && (
           <Box>
             <Typography variant="subtitle2" mb={1}>
-              Days of week:
+              {t("selectDaysOfWeek")}
             </Typography>
             <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
               {DAYS_OF_WEEK.map((day) => {
@@ -192,7 +194,7 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
                 return (
                   <Chip
                     key={day.value}
-                    label={day.label}
+                    label={t(day.key)}
                     size="small"
                     onClick={() => toggleDay(day.value)}
                     color={isSelected ? "primary" : "default"}
@@ -205,12 +207,12 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
         )}
 
         <TextField
-          label="Time of Day (Optional)"
+          label={`${t("timeOfDay")} (${t("optional")})`}
           type="time"
           value={timeOfDay}
           onChange={(e) => setTimeOfDay(e.target.value)}
           fullWidth
-          helperText="When should this habit be done? e.g., 08:00 for morning, 20:00 for evening"
+          helperText={t("timeExample")}
           InputLabelProps={{
             shrink: true,
           }}
@@ -218,11 +220,11 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
 
         <Box>
           <Typography variant="subtitle2" mb={1}>
-            Assign to members:
+            {t("assignedTo")}:
           </Typography>
           {members.length === 0 ? (
             <Typography variant="body2" color="text.secondary">
-              No members available. Please add members first.
+              {t("noHabits")}
             </Typography>
           ) : (
             <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
@@ -251,7 +253,7 @@ export default function HabitForm({ familyId, members }: HabitFormProps) {
         fullWidth
         disabled={loading || members.length === 0}
       >
-        {loading ? "Adding..." : "Add Habit"}
+        {loading ? t("creating") : t("createHabit")}
       </Button>
     </Box>
   );

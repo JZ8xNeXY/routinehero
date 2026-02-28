@@ -6,12 +6,15 @@ import Link from "next/link";
 import type { Database } from "@/types/supabase";
 import MemberForm from "@/components/member/MemberForm";
 import MemberList from "@/components/member/MemberList";
+import { getTranslations } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
 
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 
 export default async function MembersPage() {
+  const t = await getTranslations("members");
+  const tSettings = await getTranslations("settings");
   const supabase = (await createClient()) as any;
 
   // Auth check
@@ -59,15 +62,15 @@ export default async function MembersPage() {
             startIcon={<ArrowBackIcon />}
             variant="outlined"
           >
-            Back to Dashboard
+            {tSettings("backToDashboard")}
           </Button>
         </Stack>
 
         <Typography variant="h4" fontWeight="bold" mb={1}>
-          Manage Family Members
+          {t("title")}
         </Typography>
         <Typography variant="body2" color="text.secondary" mb={4}>
-          Add, edit, or remove family members. Each member can be assigned to habits.
+          {t("subtitle")}
         </Typography>
 
         <Stack spacing={4}>

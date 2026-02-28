@@ -1,44 +1,32 @@
-import { Box, Typography, Button, Stack } from "@mui/material";
-import Link from "next/link";
+import { Box } from "@mui/material";
+import LandingHeader from "@/components/landing/LandingHeader";
+import HeroSection from "@/components/landing/HeroSection";
+import DemoSection from "@/components/landing/DemoSection";
+import HowItWorksSection from "@/components/landing/HowItWorksSection";
+import BenefitsSection from "@/components/landing/BenefitsSection";
+import FeaturesSection from "@/components/landing/FeaturesSection";
+import LineIntegrationSection from "@/components/landing/LineIntegrationSection";
+import SocialProofSection from "@/components/landing/SocialProofSection";
+import PricingSection from "@/components/landing/PricingSection";
+import FAQSection from "@/components/landing/FAQSection";
+import CTASection from "@/components/landing/CTASection";
 
 export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (
-    <Box
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 3,
-      }}
-    >
-      <Typography variant="h3" component="h1" fontWeight="bold">
-        RoutineHero
-      </Typography>
-      <Typography variant="body1" color="text.secondary">
-        Family habit tracking with gamification
-      </Typography>
-      <Stack direction="row" spacing={2}>
-        <Button
-          component={Link}
-          href="/signup"
-          variant="contained"
-          size="large"
-        >
-          Get Started
-        </Button>
-        <Button
-          component={Link}
-          href="/login"
-          variant="outlined"
-          size="large"
-        >
-          Sign In
-        </Button>
-      </Stack>
+    <Box>
+      <LandingHeader />
+      <HeroSection />
+      <DemoSection />
+      <HowItWorksSection />
+      <BenefitsSection />
+      <FeaturesSection />
+      <LineIntegrationSection />
+      <SocialProofSection />
+      <PricingSection />
+      <FAQSection />
+      <CTASection />
     </Box>
   );
 }

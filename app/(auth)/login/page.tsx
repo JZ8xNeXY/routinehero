@@ -18,8 +18,10 @@ import {
 import GoogleIcon from "@mui/icons-material/Google";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
+  const t = useTranslations("auth");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
@@ -90,10 +92,10 @@ export default function LoginPage() {
       >
         <Paper elevation={3} sx={{ p: 4, width: "100%" }}>
           <Typography variant="h4" component="h1" fontWeight="bold" mb={1}>
-            Welcome back
+            {t("welcome")}
           </Typography>
           <Typography variant="body2" color="text.secondary" mb={4}>
-            Sign in to continue to RoutineHero
+            {t("signIn")}
           </Typography>
 
           {error && (
@@ -110,7 +112,7 @@ export default function LoginPage() {
             onClick={handleGoogleLogin}
             sx={{ mb: 3 }}
           >
-            Continue with Google
+            {t("signInWithGoogle")}
           </Button>
 
           <Divider sx={{ mb: 3 }}>or</Divider>
@@ -118,7 +120,7 @@ export default function LoginPage() {
           <Box component="form" onSubmit={handleLogin}>
             <TextField
               fullWidth
-              label="Email"
+              label={t("email")}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -128,7 +130,7 @@ export default function LoginPage() {
             />
             <TextField
               fullWidth
-              label="Password"
+              label={t("password")}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -145,7 +147,7 @@ export default function LoginPage() {
                   color="primary"
                 />
               }
-              label="Keep me signed in"
+              label={t("rememberMe") || "Keep me signed in"}
               sx={{ mt: 1 }}
             />
 
@@ -157,13 +159,13 @@ export default function LoginPage() {
               disabled={loading}
               sx={{ mt: 2, mb: 2 }}
             >
-              {loading ? "Signing in..." : "Sign In"}
+              {loading ? t("signingIn") : t("signIn")}
             </Button>
 
             <Typography variant="body2" textAlign="center" color="text.secondary">
-              Don&apos;t have an account?{" "}
+              {t("noAccount")}{" "}
               <MuiLink component={Link} href="/signup" fontWeight="600">
-                Sign up
+                {t("signUp")}
               </MuiLink>
             </Typography>
           </Box>
