@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { Box, Container, Stack, Typography } from "@mui/material";
+import { Suspense } from "react";
 import type { Database } from "@/types/supabase";
 import DashboardContent from "@/components/dashboard/DashboardContent";
 import CelebrationEffects from "@/components/celebration/CelebrationEffects";
@@ -119,7 +120,9 @@ export default async function DashboardPage() {
   return (
     <Container maxWidth="lg">
       <Box sx={{ py: 4 }}>
-        <CelebrationEffects />
+        <Suspense fallback={null}>
+          <CelebrationEffects />
+        </Suspense>
 
         <Stack
           direction="row"
