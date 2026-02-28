@@ -17,6 +17,12 @@ export function createClient(rememberMe?: boolean) {
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: "pkce",
+      },
       cookieOptions: {
         // Set cookie lifetime based on rememberMe preference
         maxAge: shouldRemember ? 60 * 60 * 24 * 365 : undefined, // 1 year or session
