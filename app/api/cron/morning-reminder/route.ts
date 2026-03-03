@@ -55,39 +55,12 @@ export async function GET(request: NextRequest) {
 
     let sentCount = 0;
 
-    // 各家族に通知送信
+    // 各家族に通知送信（毎朝5時JST実行）
     for (const setting of lineSettings) {
       const settingData = setting as any;
 
       // Use family's timezone for accurate date and time calculation
       const timezone = settingData.families?.timezone || 'UTC';
-      const now = new Date();
-
-      // Get current hour and minute in family's timezone
-      const timeFormatter = new Intl.DateTimeFormat('en-US', {
-        timeZone: timezone,
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
-      });
-      const currentTime = timeFormatter.format(now);
-      const [currentHour, currentMinute] = currentTime.split(':').map(Number);
-
-      // 設定時刻と一致する場合のみ送信（または設定がない場合は8:00に送信）
-      const reminderTime = settingData.morning_reminder_time || '08:00';
-      const [targetHour, targetMinute] = reminderTime.split(':').map(Number);
-
-      // Check if current time is within the target time window
-      // Only send if we're at or after the target time, but within 15 minutes
-      // This prevents duplicate sends while allowing some timing flexibility
-      const currentTotalMinutes = currentHour * 60 + currentMinute;
-      const targetTotalMinutes = targetHour * 60 + targetMinute;
-      const diffMinutes = currentTotalMinutes - targetTotalMinutes;
-
-      // Skip if we're before the target time or more than 14 minutes after
-      if (diffMinutes < 0 || diffMinutes >= 15) {
-        continue;
-      }
 
       const { today, yesterday, todayDayOfWeek, yesterdayDayOfWeek } = getDateInfoInTimezone(timezone);
 
