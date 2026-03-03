@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
+import { createClient } from '@supabase/supabase-js';
 import { sendHabitReminderBefore30Min } from '@/lib/line/client';
 
 /**
@@ -21,7 +21,17 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const supabase = await createClient();
+    // Use service role to bypass RLS
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
 
     // Calculate target time (current time + 30 minutes)
     const now = new Date();
