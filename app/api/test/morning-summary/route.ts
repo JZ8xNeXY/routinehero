@@ -104,13 +104,12 @@ export async function GET(request: NextRequest) {
 
           const totalYesterday = yesterdayHabits.length;
 
-          // 昨日の完了数を取得
+          // 昨日の完了数を取得（date カラムを使用してタイムゾーンの問題を回避）
           const { data: completedLogs } = await supabase
             .from('habit_logs')
             .select('id')
             .eq('member_id', member.id)
-            .gte('completed_at', yesterday)
-            .lt('completed_at', today);
+            .eq('date', yesterday);
 
           const completedYesterday = completedLogs?.length || 0;
 
