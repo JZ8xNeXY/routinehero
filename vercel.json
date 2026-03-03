@@ -3,10 +3,6 @@
     {
       "path": "/api/cron/morning-reminder",
       "schedule": "0 20 * * *"
-    },
-    {
-      "path": "/api/cron/habit-reminder",
-      "schedule": "*/30 * * * *"
     }
   ]
 }
