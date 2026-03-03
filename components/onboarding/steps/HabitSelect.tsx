@@ -143,7 +143,7 @@ export default function HabitSelect({ data, onBack }: HabitSelectProps) {
         name: member.name,
         role: member.role,
         age: member.age,
-        character_id: member.characterId,
+        character_id: null,
         display_order: index,
       }));
 

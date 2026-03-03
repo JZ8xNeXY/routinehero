@@ -17,22 +17,13 @@ import {
   DialogContentText,
   DialogActions,
   Alert,
-  Grid,
-  Card,
-  CardActionArea,
-  CardContent,
   Divider,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
   Avatar,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import Link from "next/link";
@@ -48,21 +39,11 @@ interface MemberListProps {
   familyId: string;
 }
 
-const characters = [
-  { id: "ninja", name: "Ninja", emoji: "🥷" },
-  { id: "wizard", name: "Wizard", emoji: "🧙" },
-  { id: "knight", name: "Knight", emoji: "🛡️" },
-  { id: "pirate", name: "Pirate", emoji: "🏴‍☠️" },
-  { id: "astronaut", name: "Astronaut", emoji: "🚀" },
-  { id: "superhero", name: "Superhero", emoji: "🦸" },
-];
-
 export default function MemberList({ members, familyId }: MemberListProps) {
   const tMembers = useTranslations("members");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [editAge, setEditAge] = useState("");
-  const [editCharacterId, setEditCharacterId] = useState("");
   const [editAvatarUrl, setEditAvatarUrl] = useState("");
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -76,7 +57,6 @@ export default function MemberList({ members, familyId }: MemberListProps) {
     setEditingId(member.id);
     setEditName(member.name);
     setEditAge(member.age?.toString() || "");
-    setEditCharacterId(member.character_id || "");
     setEditAvatarUrl(member.avatar_url || "");
     setError("");
   };
@@ -118,7 +98,6 @@ export default function MemberList({ members, familyId }: MemberListProps) {
     setEditingId(null);
     setEditName("");
     setEditAge("");
-    setEditCharacterId("");
     setEditAvatarUrl("");
     setError("");
   };
@@ -143,18 +122,13 @@ export default function MemberList({ members, familyId }: MemberListProps) {
         setError("Age must be between 4 and 100 for children");
         return;
       }
-
-      if (!editCharacterId) {
-        setError("Please select a character");
-        return;
-      }
     }
 
     const result = await updateMember({
       memberId: member.id,
       name: editName.trim(),
       age: member.role === "child" ? parseInt(editAge) : 0,
-      characterId: member.role === "child" ? editCharacterId : null,
+      characterId: null,
       avatarUrl: editAvatarUrl || null,
     });
 
@@ -188,7 +162,6 @@ export default function MemberList({ members, familyId }: MemberListProps) {
 
   const renderMemberItem = (member: MemberRow) => {
     const isEditing = editingId === member.id;
-    const character = characters.find((c) => c.id === member.character_id);
 
     if (isEditing) {
       return (
@@ -238,42 +211,15 @@ export default function MemberList({ members, familyId }: MemberListProps) {
             />
 
             {member.role === "child" && (
-              <>
-                <TextField
-                  label="Age"
-                  type="number"
-                  value={editAge}
-                  onChange={(e) => setEditAge(e.target.value)}
-                  fullWidth
-                  size="small"
-                  inputProps={{ min: 4, max: 100 }}
-                />
-
-                <Box>
-                  <Typography variant="subtitle2" mb={1}>
-                    Character
-                  </Typography>
-                  <Grid container spacing={1}>
-                    {characters.map((char) => (
-                      <Grid item xs={4} key={char.id}>
-                        <Card
-                          sx={{
-                            border: editCharacterId === char.id ? 2 : 0,
-                            borderColor: "primary.main",
-                          }}
-                        >
-                          <CardActionArea onClick={() => setEditCharacterId(char.id)}>
-                            <CardContent sx={{ textAlign: "center", py: 1 }}>
-                              <Typography variant="h4">{char.emoji}</Typography>
-                              <Typography variant="caption">{char.name}</Typography>
-                            </CardContent>
-                          </CardActionArea>
-                        </Card>
-                      </Grid>
-                    ))}
-                  </Grid>
-                </Box>
-              </>
+              <TextField
+                label="Age"
+                type="number"
+                value={editAge}
+                onChange={(e) => setEditAge(e.target.value)}
+                fullWidth
+                size="small"
+                inputProps={{ min: 4, max: 100 }}
+              />
             )}
           </Box>
 
@@ -309,17 +255,14 @@ export default function MemberList({ members, familyId }: MemberListProps) {
         </Avatar>
         <ListItemText
           primary={
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              {character && <Typography variant="h6">{character.emoji}</Typography>}
-              <Typography variant="body1" fontWeight="bold">
-                {member.name}
-              </Typography>
-            </Box>
+            <Typography variant="body1" fontWeight="bold">
+              {member.name}
+            </Typography>
           }
           secondary={
             member.role === "child" && member.age
-              ? `Age ${member.age}${character ? ` · ${character.name}` : ""}`
-              : "Parent"
+              ? `Age ${member.age}`
+              : tMembers("parent")
           }
         />
         <ListItemSecondaryAction>
@@ -345,7 +288,7 @@ export default function MemberList({ members, familyId }: MemberListProps) {
   return (
     <Box>
       <Typography variant="h6" fontWeight="bold" mb={2}>
-        Family Members
+        {tMembers("familyMembers")}
       </Typography>
 
       {error && !editingId && (
@@ -357,7 +300,7 @@ export default function MemberList({ members, familyId }: MemberListProps) {
       {parents.length > 0 && (
         <Box mb={3}>
           <Typography variant="subtitle2" color="text.secondary" mb={1}>
-            Parents
+            {tMembers("parents")}
           </Typography>
           <List sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
             {parents.map((parent, index) => (
@@ -373,7 +316,7 @@ export default function MemberList({ members, familyId }: MemberListProps) {
       {children.length > 0 && (
         <Box>
           <Typography variant="subtitle2" color="text.secondary" mb={1}>
-            Children
+            {tMembers("children")}
           </Typography>
           <List sx={{ bgcolor: "background.paper", borderRadius: 1 }}>
             {children.map((child, index) => (
