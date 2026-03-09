@@ -13,6 +13,7 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import { useTranslations } from "next-intl";
 import type { Database } from "@/types/supabase";
 
+
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
 
 interface MemberLeaderboardProps {
@@ -48,6 +49,8 @@ function getLevelProgress(xp: number, level: number): number {
 
 export default function MemberLeaderboard({ members }: MemberLeaderboardProps) {
   const t = useTranslations("dashboard");
+  const tLeaderboard = useTranslations("leaderboard");
+  const tMember = useTranslations("member");
 
   // Sort members by XP (descending)
   const sortedMembers = [...members].sort((a, b) => b.total_xp - a.total_xp);
@@ -136,7 +139,7 @@ export default function MemberLeaderboard({ members }: MemberLeaderboardProps) {
                         {member.total_xp} XP
                       </Typography>
                       <Typography variant="caption" color="text.secondary">
-                        Next: {xpForNext} XP
+                        {tLeaderboard("nextLevel", { xp: xpForNext })}
                       </Typography>
                     </Stack>
                     <LinearProgress
@@ -154,24 +157,14 @@ export default function MemberLeaderboard({ members }: MemberLeaderboardProps) {
                     />
                   </Box>
 
-                  <Stack direction="row" spacing={3}>
-                    <Box>
-                      <Typography variant="caption" color="text.secondary">
-                        {t("streak")}
-                      </Typography>
-                      <Typography variant="body2" fontWeight="600">
-                        🔥 {member.current_streak} days
-                      </Typography>
-                    </Box>
-                    <Box>
-                      <Typography variant="caption" color="text.secondary">
-                        {t("best")}
-                      </Typography>
-                      <Typography variant="body2" fontWeight="600">
-                        ⭐ {member.longest_streak} days
-                      </Typography>
-                    </Box>
-                  </Stack>
+                  <Box>
+                    <Typography variant="caption" color="text.secondary">
+                      {t("streak")}
+                    </Typography>
+                    <Typography variant="body2" fontWeight="600">
+                      🔥 {tMember("days", { count: member.current_streak })}
+                    </Typography>
+                  </Box>
                 </Box>
               </Stack>
             </Box>

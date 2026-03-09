@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import type { Database } from "@/types/supabase";
 import NextMissionCard from "@/components/dashboard/NextMissionCard";
-import FamilyStatusBar from "@/components/member/FamilyStatusBar";
 import MemberQuickNav from "@/components/member/MemberQuickNav";
 import HabitCard from "@/components/habit/HabitCard";
 import { useTranslations } from "next-intl";
@@ -67,7 +66,6 @@ export default function DashboardContent({
 
   return (
     <>
-      <FamilyStatusBar members={members} />
       <MemberQuickNav members={members} />
 
       <FormControl size="small" sx={{ mb: 3, minWidth: 200 }}>

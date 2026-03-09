@@ -3,7 +3,6 @@
 import { Box, Paper, Typography, Grid, Stack, Chip } from "@mui/material";
 import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import type { Database } from "@/types/supabase";
 
 type HabitLogRow = Database["public"]["Tables"]["habit_logs"]["Row"];
@@ -12,14 +11,12 @@ interface StatsSectionProps {
   logs: HabitLogRow[];
   totalHabits: number;
   currentStreak: number;
-  longestStreak: number;
 }
 
 export default function StatsSection({
   logs,
   totalHabits,
   currentStreak,
-  longestStreak,
 }: StatsSectionProps) {
   // Calculate completion rate for last 7 days
   const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -54,7 +51,7 @@ export default function StatsSection({
 
       <Grid container spacing={2}>
         {/* Completion Rate */}
-        <Grid item xs={6} sm={3}>
+        <Grid item xs={6} sm={4}>
           <Paper
             sx={{
               p: 2,
@@ -74,7 +71,7 @@ export default function StatsSection({
         </Grid>
 
         {/* Total Completed */}
-        <Grid item xs={6} sm={3}>
+        <Grid item xs={6} sm={4}>
           <Paper
             sx={{
               p: 2,
@@ -94,7 +91,7 @@ export default function StatsSection({
         </Grid>
 
         {/* Current Streak */}
-        <Grid item xs={6} sm={3}>
+        <Grid item xs={6} sm={4}>
           <Paper
             sx={{
               p: 2,
@@ -110,27 +107,7 @@ export default function StatsSection({
               {currentStreak}
             </Typography>
             <Typography variant="caption" color="text.secondary">
-              現在の連続
-            </Typography>
-          </Paper>
-        </Grid>
-
-        {/* Best Streak */}
-        <Grid item xs={6} sm={3}>
-          <Paper
-            sx={{
-              p: 2,
-              textAlign: "center",
-              border: 1,
-              borderColor: "divider",
-            }}
-          >
-            <EmojiEventsIcon sx={{ fontSize: 32, mb: 1, color: "#fbbf24" }} />
-            <Typography variant="h5" fontWeight="bold" sx={{ color: "#fbbf24" }}>
-              {longestStreak}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              最長連続
+              連続日数
             </Typography>
           </Paper>
         </Grid>

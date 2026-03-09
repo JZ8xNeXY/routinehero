@@ -41,6 +41,7 @@ import SaveIcon from "@mui/icons-material/Save";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { updateHabit, deleteHabit, reactivateHabit } from "@/app/(app)/app/habits/actions";
 import type { Database } from "@/types/supabase";
+import { useTranslations } from "next-intl";
 
 type HabitRow = Database["public"]["Tables"]["habits"]["Row"];
 type MemberRow = Database["public"]["Tables"]["members"]["Row"];
@@ -52,6 +53,7 @@ interface HabitListProps {
 }
 
 export default function HabitList({ habits, members, familyId }: HabitListProps) {
+  const t = useTranslations("habits");
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editTitle, setEditTitle] = useState("");
@@ -358,7 +360,7 @@ export default function HabitList({ habits, members, familyId }: HabitListProps)
 
               <Box>
                 <Typography variant="caption" color="text.secondary" display="block" mb={0.5}>
-                  Assigned to:
+                  {t("assignedTo")}:
                 </Typography>
                 <Stack direction="row" spacing={1} flexWrap="wrap" gap={1}>
                   {assignedMembers.map((member) => (
@@ -398,7 +400,7 @@ export default function HabitList({ habits, members, familyId }: HabitListProps)
   return (
     <Box>
       <Typography variant="h6" fontWeight="bold" mb={2}>
-        Family Habits
+        {t("familyHabits")}
       </Typography>
 
       {error && !editingId && (
@@ -412,8 +414,8 @@ export default function HabitList({ habits, members, familyId }: HabitListProps)
         onChange={(_, newValue) => setActiveTab(newValue)}
         sx={{ mb: 3 }}
       >
-        <Tab label={`Active (${activeHabits.length})`} value="active" />
-        <Tab label={`Archived (${archivedHabits.length})`} value="archived" />
+        <Tab label={`${t("active")} (${activeHabits.length})`} value="active" />
+        <Tab label={`${t("archived")} (${archivedHabits.length})`} value="archived" />
       </Tabs>
 
       {displayedHabits.length === 0 ? (

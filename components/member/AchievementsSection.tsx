@@ -16,7 +16,6 @@ interface Achievement {
 interface AchievementsSectionProps {
   totalXP: number;
   currentStreak: number;
-  longestStreak: number;
   totalCompleted: number;
   level: number;
 }
@@ -24,7 +23,6 @@ interface AchievementsSectionProps {
 export default function AchievementsSection({
   totalXP,
   currentStreak,
-  longestStreak,
   totalCompleted,
   level,
 }: AchievementsSectionProps) {
@@ -62,8 +60,8 @@ export default function AchievementsSection({
       description: "3日間連続で習慣を完了",
       icon: "🔥",
       requirement: 3,
-      unlocked: longestStreak >= 3,
-      progress: Math.min(longestStreak, 3),
+      unlocked: currentStreak >= 3,
+      progress: Math.min(currentStreak, 3),
     },
     {
       id: "streak_7",
@@ -71,8 +69,8 @@ export default function AchievementsSection({
       description: "7日間連続で習慣を完了",
       icon: "🌟",
       requirement: 7,
-      unlocked: longestStreak >= 7,
-      progress: Math.min(longestStreak, 7),
+      unlocked: currentStreak >= 7,
+      progress: Math.min(currentStreak, 7),
     },
     {
       id: "streak_30",
@@ -80,8 +78,8 @@ export default function AchievementsSection({
       description: "30日間連続で習慣を完了",
       icon: "🏆",
       requirement: 30,
-      unlocked: longestStreak >= 30,
-      progress: Math.min(longestStreak, 30),
+      unlocked: currentStreak >= 30,
+      progress: Math.min(currentStreak, 30),
     },
     {
       id: "level_5",

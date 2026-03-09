@@ -26,10 +26,9 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [checking, setChecking] = useState(true);
   const router = useRouter();
 
-  // Check if user is already logged in
+  // Check if user is already logged in - run in background without blocking UI
   useEffect(() => {
     const checkUser = async () => {
       try {
@@ -43,8 +42,6 @@ export default function SignupPage() {
         }
       } catch (error) {
         console.error("Error checking auth:", error);
-      } finally {
-        setChecking(false);
       }
     };
 
@@ -109,26 +106,6 @@ export default function SignupPage() {
       setError(err.message || t("signupFailed"));
     }
   };
-
-  // Show loading state while checking auth
-  if (checking) {
-    return (
-      <Container maxWidth="sm">
-        <Box
-          sx={{
-            minHeight: "100vh",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography variant="body1" color="text.secondary">
-            {t("loading")}...
-          </Typography>
-        </Box>
-      </Container>
-    );
-  }
 
   return (
     <Container maxWidth="sm">

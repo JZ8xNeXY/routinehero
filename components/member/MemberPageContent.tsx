@@ -169,7 +169,6 @@ export default function MemberPageContent({
         logs={allLogs}
         totalHabits={totalHabitsToday}
         currentStreak={member.current_streak || 0}
-        longestStreak={member.longest_streak || 0}
       />
 
       {/* Calendar View */}
@@ -179,7 +178,6 @@ export default function MemberPageContent({
       <AchievementsSection
         totalXP={member.total_xp || 0}
         currentStreak={member.current_streak || 0}
-        longestStreak={member.longest_streak || 0}
         totalCompleted={allLogs.length}
         level={member.level || 1}
       />

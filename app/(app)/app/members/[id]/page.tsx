@@ -16,11 +16,12 @@ import {
   CardContent,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import LocalFireDepartmentIcon from "@mui/icons-material/LocalFireDepartment";
 import StarIcon from "@mui/icons-material/Star";
 import Link from "next/link";
 import type { Database } from "@/types/supabase";
+import CalendarView from "@/components/member/CalendarView";
+import RecentActivity from "@/components/member/RecentActivity";
 
 export const dynamic = "force-dynamic";
 
@@ -102,13 +103,26 @@ export default async function MemberDetailPage({
 
   const member = memberData as MemberRow;
 
-  // Get recent habit logs
+  // Get all habit logs for calendar (last 90 days)
+  const ninetyDaysAgo = new Date();
+  ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+  const ninetyDaysAgoStr = ninetyDaysAgo.toISOString().slice(0, 10);
+
+  const { data: allLogsData } = await supabase
+    .from("habit_logs")
+    .select("*")
+    .eq("member_id", member.id)
+    .gte("date", ninetyDaysAgoStr)
+    .order("date", { ascending: false });
+
+  const allLogs = (allLogsData || []) as HabitLogRow[];
+
+  // Get all habit logs for recent activity
   const { data: logsData } = await supabase
     .from("habit_logs")
     .select("*, habits(title, icon)")
     .eq("member_id", member.id)
-    .order("date", { ascending: false })
-    .limit(10);
+    .order("date", { ascending: false });
 
   const recentLogs = (logsData || []) as (HabitLogRow & {
     habits: { title: string; icon: string };
@@ -183,7 +197,7 @@ export default async function MemberDetailPage({
 
         {/* Stats Grid */}
         <Grid container spacing={2} mb={3}>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={6}>
             <Card>
               <CardContent sx={{ textAlign: "center" }}>
                 <StarIcon sx={{ fontSize: 48, color: "primary.main", mb: 1 }} />
@@ -196,7 +210,7 @@ export default async function MemberDetailPage({
               </CardContent>
             </Card>
           </Grid>
-          <Grid item xs={12} sm={4}>
+          <Grid item xs={12} sm={6}>
             <Card>
               <CardContent sx={{ textAlign: "center" }}>
                 <LocalFireDepartmentIcon sx={{ fontSize: 48, color: "#f97316", mb: 1 }} />
@@ -204,68 +218,18 @@ export default async function MemberDetailPage({
                   {member.current_streak}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  Current Streak
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={12} sm={4}>
-            <Card>
-              <CardContent sx={{ textAlign: "center" }}>
-                <EmojiEventsIcon sx={{ fontSize: 48, color: "#fbbf24", mb: 1 }} />
-                <Typography variant="h4" fontWeight="bold">
-                  {member.longest_streak}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  Best Streak
+                  Streak
                 </Typography>
               </CardContent>
             </Card>
           </Grid>
         </Grid>
 
-        {/* Recent Activity */}
-        <Paper elevation={2} sx={{ p: 3 }}>
-          <Typography variant="h6" fontWeight="bold" mb={2}>
-            Recent Activity
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
+        {/* Calendar View */}
+        <CalendarView logs={allLogs} memberName={member.name} />
 
-          {recentLogs.length === 0 ? (
-            <Typography variant="body2" color="text.secondary" textAlign="center" py={4}>
-              No activity yet. Complete some habits to see them here!
-            </Typography>
-          ) : (
-            <Stack spacing={2}>
-              {recentLogs.map((log) => (
-                <Box
-                  key={log.id}
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    p: 2,
-                    borderRadius: 1,
-                    bgcolor: "grey.50",
-                  }}
-                >
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Typography variant="h5">{log.habits.icon}</Typography>
-                    <Box>
-                      <Typography variant="body1" fontWeight="600">
-                        {log.habits.title}
-                      </Typography>
-                      <Typography variant="caption" color="text.secondary">
-                        {new Date(log.date).toLocaleDateString()}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Chip label={`+${log.xp_earned} XP`} color="success" size="small" />
-                </Box>
-              ))}
-            </Stack>
-          )}
-        </Paper>
+        {/* Recent Activity */}
+        <RecentActivity logs={recentLogs} />
       </Box>
     </Container>
   );
